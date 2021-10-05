@@ -37,29 +37,37 @@ let color_cell color r c =
     (((rows - r - 1) * tile_size) + snd board_pos)
     tile_size tile_size
 
-let draw_2D_aray ?draw_white:(b = false) ar row_start column_start =
+let draw_2D_aray
+    ?draw_white:(b = false)
+    ?white_out:(b2 = false)
+    ar
+    row_start
+    column_start =
   for r = 0 to Array.length ar - 1 do
     for c = 0 to Array.length ar.(0) - 1 do
       let r' = r + row_start in
       let c' = c + column_start in
-      match ar.(r).(c) with
-      | 'i' -> color_cell cyan r' c'
-      | 'o' -> color_cell yellow r' c'
-      | 't' -> color_cell magenta r' c'
-      | 's' -> color_cell green r' c'
-      | 'z' -> color_cell red r' c'
-      | 'j' -> color_cell blue r' c'
-      | 'l' -> color_cell (rgb 255 165 0) r' c'
-      | ' ' -> if b then color_cell white r' c' else ()
-      | _ -> failwith "shouldnt happen ¯\\_(ツ)_/¯"
+      if b2 then match ar.(r).(c) with _ -> color_cell white r' c'
+      else
+        match ar.(r).(c) with
+        | 'i' -> color_cell cyan r' c'
+        | 'o' -> color_cell yellow r' c'
+        | 't' -> color_cell magenta r' c'
+        | 's' -> color_cell green r' c'
+        | 'z' -> color_cell red r' c'
+        | 'j' -> color_cell blue r' c'
+        | 'l' -> color_cell (rgb 255 165 0) r' c'
+        | ' ' -> if b then color_cell white r' c' else ()
+        | _ -> failwith "shouldnt happen ¯\\_(ツ)_/¯"
     done
   done;
   draw_outline ()
 
 let draw_board b = draw_2D_aray ~draw_white:true b 0 0
 
-let draw_tetromino t =
-  match t with { state; col = c; row = r } -> draw_2D_aray state r c
+let draw_tetromino ?white_out:(b = false) t =
+  match t with
+  | { state; col = c; row = r } -> draw_2D_aray ~draw_white:b state r c
 
 (** Gets height of board (highest row a tetis piece is in)*)
 let get_height b =
@@ -74,38 +82,52 @@ let get_height b =
     b ();
   List.fold_left max 0 (Array.to_list heights)
 
-let copy_2D_array_to b1 b2 =
+let copy_to_2D_array b1 b2 =
   for r = 0 to Array.length b1 - 1 do
     for c = 0 to Array.length b1.(0) - 1 do
-      b1.(r).(c) <- b2.(r).(c)
+      b1.(r).(c) <- (List.nth b2 r).(c)
     done
-  done
+  done;
+  b1
 
-(** Optimization needed to be done, maybe if needed update score here
-    with [get_height b - Array.length uncleared_rows] lines cleared ; *)
+let rec make n =
+  match n with 0 -> [] | _ -> Array.make columns ' ' :: make (n - 1)
+
 let clear_lines b =
-  let uncleared_rows =
-    Array.concat
+  let filled =
+    Array.fold_left
+      (fun acc x ->
+        acc && List.mem x [ 'i'; 'o'; 't'; 's'; 'z'; 'j'; 'l' ])
+      true
+  in
+  let cleared_rows =
+    List.length
       (List.rev
          (Array.fold_left
-            (fun acc x ->
-              if
-                Array.fold_left
-                  (fun acc x ->
-                    acc
-                    && List.mem x [ 'i'; 'o'; 't'; 's'; 'z'; 'j'; 'l' ])
-                  true x
-              then 
-                (* cleared row, use mutable data type (ref) to increase lines cleared*)
-                acc
-              else (
-                [| x |] :: acc))
+            (fun acc x -> if filled x then Array.copy x :: acc else acc)
             [] b))
   in
-  let fill_rows =
-    Array.make_matrix (rows - Array.length uncleared_rows) columns ' '
+  let uncleared_rows =
+    List.rev
+      (Array.fold_left
+         (fun acc x ->
+           if
+             filled x
+             || Array.fold_left (fun acc x -> acc && x == ' ') true x
+           then acc
+           else Array.copy x :: acc)
+         [] b)
   in
-  uncleared_rows |> Array.append fill_rows |> copy_2D_array_to b
+  (* TODO: [cleared_rows] is the number of cleared rows, use mutable
+     data type (ref) to increase lines cleared/score *)
+  if cleared_rows = 0 then (
+    draw_board b;
+    ())
+  else
+    let new_board =
+      make (rows - List.length uncleared_rows) @ uncleared_rows
+    in
+    new_board |> copy_to_2D_array b |> draw_board
 
 let check_valid t b =
   let checks =
@@ -131,8 +153,11 @@ let check_valid t b =
 let update_board t b =
   Array.iteri
     (fun r rowv ->
-      Array.iteri (fun c v -> b.(r + t.row).(c + t.col) <- v) rowv)
-    t.state
+      Array.iteri
+        (fun c v -> if v <> ' ' then b.(r + t.row).(c + t.col) <- v)
+        rowv)
+    t.state;
+  clear_lines b
 
 let rec drop t b =
   let new_t = Tetromino.move_down t in

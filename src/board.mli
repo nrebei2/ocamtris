@@ -36,7 +36,7 @@ val draw_outline : unit -> unit
    only be called after calling [clear_lines b]*)
 val draw_board : board -> unit
 
-val draw_tetromino : Tetromino.tetromino -> unit
+val draw_tetromino : ?white_out:bool -> Tetromino.tetromino -> unit
 (** [draw_tetromino t] draws [t] to the GUI window. *)
 
 val clear_lines : board -> unit
