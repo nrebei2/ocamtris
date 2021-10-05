@@ -7,44 +7,44 @@ type tetromino = {
 }
 
 let i_piece =
-  { state = [| [| 'i'; 'i'; 'i'; 'i' |] |]; col = 3; row = 5 }
+  { state = [| [| 'i'; 'i'; 'i'; 'i' |] |]; col = 3; row = 0 }
 
 let o_piece =
-  { state = [| [| 'o'; 'o' |]; [| 'o'; 'o' |] |]; col = 3; row = 5 }
+  { state = [| [| 'o'; 'o' |]; [| 'o'; 'o' |] |]; col = 3; row = 0 }
 
 let t_Piece =
   {
     state = [| [| ' '; 't'; ' ' |]; [| 't'; 't'; 't' |] |];
     col = 3;
-    row = 5;
+    row = 0;
   }
 
 let s_piece =
   {
     state = [| [| ' '; 's'; 's' |]; [| 's'; 's'; ' ' |] |];
     col = 3;
-    row = 5;
+    row = 0;
   }
 
 let z_piece =
   {
     state = [| [| 'z'; 'z'; ' ' |]; [| ' '; 'z'; 'z' |] |];
     col = 3;
-    row = 5;
+    row = 0;
   }
 
 let j_Piece =
   {
     state = [| [| 'j'; ' '; ' ' |]; [| 'j'; 'j'; 'j' |] |];
     col = 3;
-    row = 5;
+    row = 0;
   }
 
 let l_piece =
   {
     state = [| [| ' '; ' '; 'l' |]; [| 'l'; 'l'; 'l' |] |];
     col = 3;
-    row = 5;
+    row = 0;
   }
 
 let rec rotate_array_left ar =

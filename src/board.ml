@@ -40,6 +40,7 @@ let color_cell color r c =
 let draw_2D_aray
     ?draw_white:(b = false)
     ?white_out:(b2 = false)
+    ?preview:(b3 = false)
     ar
     row_start
     column_start =
@@ -47,7 +48,12 @@ let draw_2D_aray
     for c = 0 to Array.length ar.(0) - 1 do
       let r' = r + row_start in
       let c' = c + column_start in
-      if b2 then match ar.(r).(c) with _ -> color_cell white r' c'
+      if b3 then
+        match ar.(r).(c) with
+        | ' ' -> ()
+        | _ -> color_cell (rgb 200 200 200) r' c'
+      else if b2 then
+        match ar.(r).(c) with _ -> color_cell white r' c'
       else
         match ar.(r).(c) with
         | 'i' -> color_cell cyan r' c'
@@ -65,11 +71,19 @@ let draw_2D_aray
 
 let draw_board b = draw_2D_aray ~draw_white:true b 0 0
 
-let draw_tetromino ?white_out:(b = false) t =
+let draw_tetromino
+    ?draw_white:(b = false)
+    ?white_out:(b2 = false)
+    ?preview:(b3 = false)
+    t =
   match t with
-  | { state; col = c; row = r } -> draw_2D_aray ~draw_white:b state r c
+  | { state; col = c; row = r } ->
+      draw_2D_aray ~draw_white:b ~white_out:b2 ~preview:b3 state r c
 
-(** Gets height of board (highest row a tetis piece is in)*)
+(** Gets height of board (highest row a tetis piece is in). Not used,
+    and isnt even right lol. However, could be used later if a bot is
+    made (checks all possible drops for a piece and uses [get_height] to
+    determine if a drop is better than another) *)
 let get_height b =
   let heights = Array.make columns 0 in
   Array.fold_right
@@ -90,8 +104,12 @@ let copy_to_2D_array b1 b2 =
   done;
   b1
 
-let rec make n =
-  match n with 0 -> [] | _ -> Array.make columns ' ' :: make (n - 1)
+let clear_board b =
+  for r = 0 to Array.length b - 1 do
+    for c = 0 to Array.length b.(0) - 1 do
+      b.(r).(c) <- ' '
+    done
+  done
 
 let clear_lines b =
   let filled =
@@ -124,6 +142,11 @@ let clear_lines b =
     draw_board b;
     ())
   else
+    let rec make n =
+      match n with
+      | 0 -> []
+      | _ -> Array.make columns ' ' :: make (n - 1)
+    in
     let new_board =
       make (rows - List.length uncleared_rows) @ uncleared_rows
     in
@@ -159,6 +182,8 @@ let update_board t b =
     t.state;
   clear_lines b
 
-let rec drop t b =
+let rec get_lowest_possible t b =
   let new_t = Tetromino.move_down t in
-  if check_valid new_t b then drop new_t b else update_board t b
+  if check_valid new_t b then get_lowest_possible new_t b else t
+
+let rec drop t b = update_board (get_lowest_possible t b) b

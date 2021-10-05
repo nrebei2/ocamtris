@@ -36,8 +36,13 @@ val draw_outline : unit -> unit
    only be called after calling [clear_lines b]*)
 val draw_board : board -> unit
 
-val draw_tetromino : ?white_out:bool -> Tetromino.tetromino -> unit
+val get_lowest_possible : Tetromino.tetromino -> board -> Tetromino.tetromino
+
+val draw_tetromino : ?draw_white:bool -> ?white_out:bool -> ?preview:bool -> Tetromino.tetromino -> unit
 (** [draw_tetromino t] draws [t] to the GUI window. *)
+
+(** [clear_board b] clears the board [b] by setting all elements to [' '] *)
+val clear_board : board -> unit
 
 val clear_lines : board -> unit
 (** [clear_lines b] edits [b] to [b'], where [b'] is [b] where all rows
