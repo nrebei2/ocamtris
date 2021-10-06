@@ -53,6 +53,7 @@ let board_tests =
            b;
          b)
         ~printer:(pp_board pp_string) );
+        
     ( "update piece on board" >:: fun _ ->
       assert_equal
         [| [| 'i'; ' ' |]; [| ' '; ' ' |] |]
@@ -62,27 +63,28 @@ let board_tests =
            b;
          b)
         ~printer:(pp_board pp_string) );
+
     ( "valid drop" >:: fun _ ->
       assert_equal true
         (check_valid i_piece board)
         ~printer:string_of_bool );
+
     ( "clear_lines" >:: fun _ ->
       assert_equal
-        [| [| ' '; ' ' |]; [| 'i'; ' ' |] |]
-        (drop
+        true
+        (let b = [| [| ' '; ' ' |]; [| ' '; ' ' |] |] in drop
            {
              name = 't';
              state =
                [|
-                 [| 'l'; 'l'; 'l'; 'l'; 'l'; 'l'; 'l'; 'l'; 'l'; ' ' |];
+                 [| 'l'; 'l';|];
                |];
              col = 0;
              row = 0;
            }
-           board;
-         clear_lines board;
-         board)
-        ~printer:(pp_board pp_string) );
+           b;
+         clear_lines b)
+        ~printer:(string_of_bool) );
   ]
 
 let tetromino_tests = []

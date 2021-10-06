@@ -66,6 +66,7 @@ and complete_move should_drop =
   draw_tetromino (get_lowest_possible !current_piece board);
   if should_drop then (
     drop !current_piece board;
+    if clear_lines board then draw_board board;
     can_hold := true)
   else clear_draw_held_piece !current_piece;
   current_piece := !next_piece;
@@ -132,7 +133,7 @@ and process_game_over_requests () =
 and main_scene () =
   playable := true;
   clear_graph ();
-  draw_title ();
+  (* draw_title (); *)
   draw_outline ();
   spawn_piece ();
   process_main_requests ()

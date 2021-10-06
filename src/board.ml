@@ -1,8 +1,8 @@
 (* Board implementation*)
 
 (* TODO: Feel like there is a lot of optimization to be done in drawing
-   the board. For instance, calling [draw_outline] after moving a
-   piece <- could maybe just draw needed outline *)
+   the board. For instance, calling [draw_outline] after moving a piece
+   <- could maybe just draw needed outline or use a picture instead *)
 
 open Graphics
 open Tetromino
@@ -46,6 +46,7 @@ let draw_outline () =
       (snd board_pos + (tile_size * j))
   done
 
+(* TODO: change to pasting a picture instead *)
 let color_cell color r c =
   set_color color;
   fill_rect
@@ -117,8 +118,7 @@ let copy_to_2D_array b1 b2 =
     for c = 0 to Array.length b1.(0) - 1 do
       b1.(r).(c) <- (List.nth b2 r).(c)
     done
-  done;
-  b1
+  done
 
 let clear_board b =
   for r = 0 to Array.length b - 1 do
@@ -154,7 +154,7 @@ let clear_lines b =
   in
   (* TODO: [cleared_rows] is the number of cleared rows, use mutable
      data type (ref) to increase lines cleared/score *)
-  if cleared_rows = 0 then ()
+  if cleared_rows = 0 then false
   else
     let rec make n =
       match n with
@@ -164,7 +164,8 @@ let clear_lines b =
     let new_board =
       make (rows - List.length uncleared_rows) @ uncleared_rows
     in
-    new_board |> copy_to_2D_array b |> draw_board
+    new_board |> copy_to_2D_array b;
+    true
 
 let check_valid t b =
   let checks =
@@ -184,8 +185,8 @@ let check_valid t b =
       t.state;
     List.fold_left ( && ) true
       (checks |> Array.to_list |> List.map Array.to_list |> List.concat)
+    (* out of bounds*)
   with _ -> false
-(* out of bounds*)
 
 let update_board t b =
   Array.iteri
@@ -193,8 +194,7 @@ let update_board t b =
       Array.iteri
         (fun c v -> if v <> ' ' then b.(r + t.row).(c + t.col) <- v)
         rowv)
-    t.state;
-  clear_lines b
+    t.state
 
 let rec get_lowest_possible t b =
   let new_t = Tetromino.move_down t in

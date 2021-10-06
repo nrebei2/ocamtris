@@ -32,8 +32,7 @@ val tile_size : int
    window *)
 val draw_outline : unit -> unit
 
-(* [draw_board b] draws the entire board [b] to the GUI window. Should
-   only be called after calling [clear_lines b]*)
+(* [draw_board b] draws the entire board [b] to the GUI window. *)
 val draw_board : board -> unit
 
 (* [draw_title ()] draws the Ocamtris title at the top of the screen. *)
@@ -41,8 +40,8 @@ val draw_title : unit -> unit
 
 val get_lowest_possible :
   Tetromino.tetromino -> board -> Tetromino.tetromino
-(** [get_lowest_possible t] is [t'], the lowest possible valid place of
-    [t] in the board *)
+(** [get_lowest_possible t b] is [t'], the lowest possible valid place
+    of [t] in [b] *)
 
 val draw_tetromino :
   ?draw_white:bool ->
@@ -53,24 +52,21 @@ val draw_tetromino :
 (** [draw_tetromino t] draws [t] to the GUI window. *)
 
 val clear_board : board -> unit
-(** [clear_board b] clears the board [b] by setting all elements to
-    [' '] *)
+(** [clear_board b] clears [b] by setting all elements to [' '] *)
 
-val clear_lines : board -> unit
-(** [clear_lines b] edits [b] to [b'], where [b'] is [b] where all rows
-    which are filled are cleared, and all rows above cleared row are
-    lowered *)
+val clear_lines : board -> bool
+(** [clear_lines b] checks if any rows of [b] are filled. If no rows are
+    filled, then clear_lines is [false]. Otherwise, it edits [b] to
+    [b'], where [b'] is [b] where all rows which are filled are cleared,
+    and then returns [true]. *)
 
 val check_valid : Tetromino.tetromino -> board -> bool
 (** [check_valid t b] is [true] if there is no overlap with [b] and [t],
-    and [t] is constrained in the bounds of the board. [false] otherwise
-    Should use this function after rotating, moving, and dropping piece
-    to determine if move is valid*)
+    and [t] is constrained in the bounds of the board. [false]
+    otherwise. *)
 
 val update_board : Tetromino.tetromino -> board -> unit
-(** [update_board t b] edits [b] to [b'], where [b'] is [b] with [t]
-    part of [b]. Should only be called once the tetris piece is dropped
-    or placed. *)
+(** [update_board t b] edits [b] to contain [t]. *)
 
 val drop : Tetromino.tetromino -> board -> unit
 (** [drop t b] calls [update_board t' b], where [t'] is
