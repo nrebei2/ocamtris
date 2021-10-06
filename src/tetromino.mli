@@ -5,7 +5,7 @@
     [state] is how the piece looks like idk
     [col] is the column position on the board for the top left of state, 0-indexed
     [row] is the column position on the board for the top left of state, 0-indexed *)
-type tetromino = {piece : char; state : char array array; col : int; row : int}
+type tetromino = {name : char; state : char array array; col : int; row : int}
 
 (** default values for each type of pieces, and where they initially spawn on the board ([col], [row] in their record type) *)
 val i_piece : tetromino
@@ -34,7 +34,7 @@ val move_down : tetromino -> tetromino
 (** [random_tetromino ()] is a random tetromino*)
 val random_tetromino : unit -> tetromino
 
-(** [draw_tetromino t] draws [t] to the GUI window. 
-    Should only be called for the current movable tetromino, as once placed it will be part of [b] in [draw_board b] *)
-val draw_tetromino : tetromino -> unit
+(** [match_name_to_default c] is one of the above default values based on [c]
+    Example: [match_name_to_default 'i'] is [i_piece]*)
+val match_name_to_default : char -> tetromino
 

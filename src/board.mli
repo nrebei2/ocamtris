@@ -5,38 +5,73 @@
     well as querying the data. *)
 
 val rows : int
+
 val columns : int
 
-(** [board] is a state of a board in time, represented as a 2D array of chars of size [rows]x[columns]
-    The structure of board is the same as the printed structure in [draw_board].
-    [b.(0).(0)] is the top left of the board (row 0, column 0)
-    A value of [' '] in the board means there is a no block at the cell at the position.
-    A value of ['i'], ['o'], ..., or ['l'] in the board means there is a block filling a cell at the position.*)
 type board = char array array
+(** [board] is a state of a board in time, represented as a 2D array of
+    chars of size [rows]x[columns] The structure of board is the same as
+    the printed structure in [draw_board]. [b.(0).(0)] is the top left
+    of the board (row 0, column 0) A value of [' '] in the board means
+    there is a no block at the cell at the position. A value of ['i'],
+    ['o'], ..., or ['l'] in the board means there is a block filling a
+    cell at the position.*)
 
-(* [board] is the current state of the game board, initially created with no blocks filling any cells *)
+(* [board] is the current state of the game board, initially created
+   with no blocks filling any cells *)
 val board : board
 
-(* [board_pos (x, y)] is the bottom left position of board at position (x, y)*)
+(* [board_pos (x, y)] is the bottom left position of board at position
+   (x, y)*)
 val board_pos : int * int
 
 (* [tile_size] is the side length of each cell of the board in pixels *)
 val tile_size : int
 
-(* [draw_board b] draws the board [b] to the GUI window *)
-val draw_board : unit -> unit
+(* [draw_outline ()] draws the grid outline of the board to the GUI
+   window *)
+val draw_outline : unit -> unit
 
-(** [clear_lines b] is [b'] where [b'] is [b] where all rows which are filled are cleared, 
-    and all rows above cleared row are lowered *)
-val clear_lines : board -> board
+(* [draw_board b] draws the entire board [b] to the GUI window. Should
+   only be called after calling [clear_lines b]*)
+val draw_board : board -> unit
 
-(** [check_valid t b] is [true] if there is no overlap with [b] and [t], and [t] is constrained in the bounds of the board. [false] otherwise
-    Should use this function after rotating, moving, and dropping piece to determine if move is valid*)
+(* [draw_title ()] draws the Ocamtris title at the top of the screen. *)
+val draw_title : unit -> unit
+
+val get_lowest_possible :
+  Tetromino.tetromino -> board -> Tetromino.tetromino
+(** [get_lowest_possible t] is [t'], the lowest possible valid place of
+    [t] in the board *)
+
+val draw_tetromino :
+  ?draw_white:bool ->
+  ?white_out:bool ->
+  ?preview:bool ->
+  Tetromino.tetromino ->
+  unit
+(** [draw_tetromino t] draws [t] to the GUI window. *)
+
+val clear_board : board -> unit
+(** [clear_board b] clears the board [b] by setting all elements to
+    [' '] *)
+
+val clear_lines : board -> unit
+(** [clear_lines b] edits [b] to [b'], where [b'] is [b] where all rows
+    which are filled are cleared, and all rows above cleared row are
+    lowered *)
+
 val check_valid : Tetromino.tetromino -> board -> bool
+(** [check_valid t b] is [true] if there is no overlap with [b] and [t],
+    and [t] is constrained in the bounds of the board. [false] otherwise
+    Should use this function after rotating, moving, and dropping piece
+    to determine if move is valid*)
 
-(** [update_board t b] is [b'] where [b'] is [b] with [t] part of [b]. Should only be called once the tetris piece is dropped or placed. *)
-val update_board : Tetromino.tetromino -> board -> board
+val update_board : Tetromino.tetromino -> board -> unit
+(** [update_board t b] edits [b] to [b'], where [b'] is [b] with [t]
+    part of [b]. Should only be called once the tetris piece is dropped
+    or placed. *)
 
-(** [drop t b] calls [update_board t' b], where [t'] is [t] at the lowest possible valid place in the board *)
-val drop : Tetromino.tetromino -> board -> board
-
+val drop : Tetromino.tetromino -> board -> unit
+(** [drop t b] calls [update_board t' b], where [t'] is
+    [get_lowest_possible t] *)
