@@ -36,6 +36,7 @@ val draw_outline : unit -> unit
    only be called after calling [clear_lines b]*)
 val draw_board : board -> unit
 
+(** [get_lowest_possible t] is [t'], the lowest possible valid place of [t] in the board *)
 val get_lowest_possible : Tetromino.tetromino -> board -> Tetromino.tetromino
 
 val draw_tetromino : ?draw_white:bool -> ?white_out:bool -> ?preview:bool -> Tetromino.tetromino -> unit
@@ -60,6 +61,6 @@ val update_board : Tetromino.tetromino -> board -> unit
     part of [b]. Should only be called once the tetris piece is dropped
     or placed. *)
 
+(** [drop t b] calls [update_board t' b], where [t'] is [get_lowest_possible t] *)
 val drop : Tetromino.tetromino -> board -> unit
-(** [drop t b] calls [update_board t' b], where [t'] is [t] at the
-    lowest possible valid place in the board *)
+

@@ -1,19 +1,31 @@
 (* Tetromino implementation*)
 
 type tetromino = {
+  name : char;
   state : char array array;
   col : int;
   row : int;
 }
 
 let i_piece =
-  { state = [| [| 'i'; 'i'; 'i'; 'i' |] |]; col = 3; row = 0 }
+  {
+    name = 'i';
+    state = [| [| 'i'; 'i'; 'i'; 'i' |] |];
+    col = 3;
+    row = 0;
+  }
 
 let o_piece =
-  { state = [| [| 'o'; 'o' |]; [| 'o'; 'o' |] |]; col = 3; row = 0 }
+  {
+    name = 'o';
+    state = [| [| 'o'; 'o' |]; [| 'o'; 'o' |] |];
+    col = 3;
+    row = 0;
+  }
 
 let t_Piece =
   {
+    name = 't';
     state = [| [| ' '; 't'; ' ' |]; [| 't'; 't'; 't' |] |];
     col = 3;
     row = 0;
@@ -21,6 +33,7 @@ let t_Piece =
 
 let s_piece =
   {
+    name = 's';
     state = [| [| ' '; 's'; 's' |]; [| 's'; 's'; ' ' |] |];
     col = 3;
     row = 0;
@@ -28,6 +41,7 @@ let s_piece =
 
 let z_piece =
   {
+    name = 'z';
     state = [| [| 'z'; 'z'; ' ' |]; [| ' '; 'z'; 'z' |] |];
     col = 3;
     row = 0;
@@ -35,6 +49,7 @@ let z_piece =
 
 let j_Piece =
   {
+    name = 'j';
     state = [| [| 'j'; ' '; ' ' |]; [| 'j'; 'j'; 'j' |] |];
     col = 3;
     row = 0;
@@ -42,6 +57,7 @@ let j_Piece =
 
 let l_piece =
   {
+    name = 'l';
     state = [| [| ' '; ' '; 'l' |]; [| 'l'; 'l'; 'l' |] |];
     col = 3;
     row = 0;
@@ -56,22 +72,34 @@ let rec rotate_array_left ar =
   ar |> Array.to_list |> List.map Array.to_list |> rotate_list' []
   |> Array.of_list |> Array.map Array.of_list
 
-let rotate_left t =
-  { state = rotate_array_left t.state; col = t.col; row = t.row }
-(* TODO: Change col and row based on rotation, save it for the rotation
-   specifics: https://tetris.fandom.com/wiki/SRS *)
+(* TODO: Change col and row based on rotation, save it till whoever
+   wants to bother with the rotation specifics:
+   https://tetris.fandom.com/wiki/SRS *)
+let rotate_left t = { t with state = rotate_array_left t.state }
 
 let rotate_right t = t |> rotate_left |> rotate_left |> rotate_left
 
-let move_left t = { state = t.state; col = t.col - 1; row = t.row }
+let move_left t = { t with col = t.col - 1 }
 
-let move_right t = { state = t.state; col = t.col + 1; row = t.row }
+let move_right t = { t with col = t.col + 1 }
 
-let move_down t = { state = t.state; col = t.col; row = t.row + 1 }
+let move_down t = { t with row = t.row + 1 }
 
+(** TODO: Not actually random, look into seeds or something *)
 let random_tetromino () =
   let choices =
     [| i_piece; o_piece; t_Piece; s_piece; z_piece; j_Piece; l_piece |]
   in
   let rand = Random.int (Array.length choices) in
   Array.get choices rand
+
+let match_name_to_default c =
+  match c with
+  | 'i' -> i_piece
+  | 'o' -> o_piece
+  | 't' -> t_Piece
+  | 's' -> s_piece
+  | 'z' -> z_piece
+  | 'j' -> j_Piece
+  | 'l' -> l_piece
+  | _ -> failwith "how"

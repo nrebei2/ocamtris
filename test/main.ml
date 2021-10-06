@@ -35,15 +35,31 @@ let board_tests =
       assert_equal
         [| [| 'i'; ' ' |]; [| 'i'; 'o' |] |]
         (let b = [| [| ' '; ' ' |]; [| ' '; ' ' |] |] in
-         drop { state = [| [| 'i'; 'o' |] |]; row = 0; col = 0 } b;
-         drop { state = [| [| 'i'; ' ' |] |]; row = 0; col = 0 } b;
+         drop
+           {
+             name = 't';
+             state = [| [| 'i'; 'o' |] |];
+             row = 0;
+             col = 0;
+           }
+           b;
+         drop
+           {
+             name = 't';
+             state = [| [| 'i'; ' ' |] |];
+             row = 0;
+             col = 0;
+           }
+           b;
          b)
         ~printer:(pp_board pp_string) );
     ( "update piece on board" >:: fun _ ->
       assert_equal
         [| [| 'i'; ' ' |]; [| ' '; ' ' |] |]
         (let b = [| [| ' '; ' ' |]; [| ' '; ' ' |] |] in
-         update_board { state = [| [| 'i' |] |]; row = 0; col = 0 } b;
+         update_board
+           { name = 't'; state = [| [| 'i' |] |]; row = 0; col = 0 }
+           b;
          b)
         ~printer:(pp_board pp_string) );
     ( "valid drop" >:: fun _ ->
@@ -55,6 +71,7 @@ let board_tests =
         [| [| ' '; ' ' |]; [| 'i'; ' ' |] |]
         (drop
            {
+             name = 't';
              state =
                [|
                  [| 'l'; 'l'; 'l'; 'l'; 'l'; 'l'; 'l'; 'l'; 'l'; ' ' |];

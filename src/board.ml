@@ -1,4 +1,7 @@
 (* Board implementation*)
+(* TODO: Feel like there is a lot of optimization to be done in drawing
+   the board. For instance, calling [draw_outline] after moving a
+   piece *)
 
 open Graphics
 open Tetromino
@@ -11,7 +14,7 @@ type board = char array array
 
 let board = Array.make_matrix rows columns ' '
 
-let board_pos = (100, 50)
+let board_pos = (130, 50)
 
 let tile_size = 30
 
@@ -53,7 +56,7 @@ let draw_2D_aray
         | ' ' -> ()
         | _ -> color_cell (rgb 200 200 200) r' c'
       else if b2 then
-        match ar.(r).(c) with _ -> color_cell white r' c'
+        match ar.(r).(c) with ' ' -> () | _ -> color_cell white r' c'
       else
         match ar.(r).(c) with
         | 'i' -> color_cell cyan r' c'
@@ -77,7 +80,7 @@ let draw_tetromino
     ?preview:(b3 = false)
     t =
   match t with
-  | { state; col = c; row = r } ->
+  | { name; state; col = c; row = r } ->
       draw_2D_aray ~draw_white:b ~white_out:b2 ~preview:b3 state r c
 
 (** Gets height of board (highest row a tetis piece is in). Not used,
