@@ -3,9 +3,9 @@
 open Graphics
 open Tetromino
 
-let rows = 10
+let rows = 20
 
-let columns = 20
+let columns = 10
 
 type board = char array array
 
@@ -15,7 +15,15 @@ let board_pos = (100, 50)
 
 let tile_size = 30
 
+let title_font_size = 50
+
+let draw_title () =
+  set_font ("-*-fixed-medium-r-semicondensed--" ^ (string_of_int title_font_size) ^ "-*-*-*-*-*-iso8859-1");
+  moveto (300 - ((fst (text_size "Ocamtris")) / 2)) (780 - (snd (text_size "Ocamtris")));
+  draw_string "Ocamtris"
+
 let draw_board () =
+  draw_title ();
   for i = 0 to columns do
     moveto (fst board_pos + (tile_size * i)) (snd board_pos);
     lineto (fst board_pos + (tile_size * i)) (snd board_pos + (tile_size * rows))
