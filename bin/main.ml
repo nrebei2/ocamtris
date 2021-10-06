@@ -17,15 +17,16 @@ let held_piece = ref None
    otherwise its gonna get worse *)
 let rec spawn_piece () =
   draw_preview ();
-  draw_tetromino ~white_out:true
-    { !current_piece with col = 12; row = 2 };
-  draw_tetromino { !next_piece with col = 12; row = 2 };
+  clear_draw_next_piece ();
   if check_valid !current_piece board then draw_tetromino !current_piece
   else game_over ()
 
-(* [clear_held_leftovers t] is called after a user drops, clearing the
-   leftovers *)
-and clear_held_leftovers tmp =
+and clear_draw_next_piece () =
+  draw_tetromino ~white_out:true
+    { !current_piece with col = 12; row = 2 };
+  draw_tetromino { !next_piece with col = 12; row = 2 }
+
+and clear_draw_held_piece tmp =
   match !held_piece with
   | None -> ()
   | Some x ->
@@ -46,10 +47,9 @@ and hold_piece () =
       complete_move false
   | Some x ->
       let tmp = !current_piece in
-      draw_tetromino ~white_out:true !current_piece;
       held_piece := Some (match_name_to_default !current_piece.name);
       current_piece := x;
-      clear_held_leftovers tmp;
+      clear_draw_held_piece tmp;
       spawn_piece ()
 
 and move_piece f =
@@ -62,17 +62,18 @@ and move_piece f =
     draw_tetromino !current_piece)
 
 and complete_move should_drop =
-  draw_tetromino ~draw_white:true !current_piece;
+  draw_tetromino ~white_out:true !current_piece;
+  draw_tetromino (get_lowest_possible !current_piece board);
   if should_drop then (
     drop !current_piece board;
     can_hold := true)
-  else clear_held_leftovers !current_piece;
+  else clear_draw_held_piece !current_piece;
   current_piece := !next_piece;
   next_piece := random_tetromino ();
   spawn_piece ()
 
-(* Should call when we implement a time system (every n seconds where n
-   increases over time) *)
+(* TODO: Should call when we implement a time system (every n seconds
+   where n increases over time) *)
 and move_piece_down () =
   if check_valid (move_down !current_piece) board = false then
     complete_move true
@@ -104,6 +105,7 @@ and process_main_requests () =
    | _ -> ());
   process_main_requests ()
 
+(* TODO *)
 and display_leaderboard () =
   moveto 100 100;
   draw_string "leaderboard here"

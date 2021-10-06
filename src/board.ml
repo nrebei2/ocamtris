@@ -1,7 +1,8 @@
 (* Board implementation*)
+
 (* TODO: Feel like there is a lot of optimization to be done in drawing
    the board. For instance, calling [draw_outline] after moving a
-   piece *)
+   piece <- could maybe just draw needed outline *)
 
 open Graphics
 open Tetromino
@@ -141,9 +142,7 @@ let clear_lines b =
   in
   (* TODO: [cleared_rows] is the number of cleared rows, use mutable
      data type (ref) to increase lines cleared/score *)
-  if cleared_rows = 0 then (
-    draw_board b;
-    ())
+  if cleared_rows = 0 then ()
   else
     let rec make n =
       match n with
