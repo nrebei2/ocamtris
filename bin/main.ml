@@ -132,6 +132,7 @@ and process_game_over_requests () =
 and main_scene () =
   playable := true;
   clear_graph ();
+  draw_title ();
   draw_outline ();
   spawn_piece ();
   process_main_requests ()

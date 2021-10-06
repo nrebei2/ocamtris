@@ -36,14 +36,25 @@ val draw_outline : unit -> unit
    only be called after calling [clear_lines b]*)
 val draw_board : board -> unit
 
-(** [get_lowest_possible t] is [t'], the lowest possible valid place of [t] in the board *)
-val get_lowest_possible : Tetromino.tetromino -> board -> Tetromino.tetromino
+(* [draw_title ()] draws the Ocamtris title at the top of the screen. *)
+val draw_title : unit -> unit
 
-val draw_tetromino : ?draw_white:bool -> ?white_out:bool -> ?preview:bool -> Tetromino.tetromino -> unit
+val get_lowest_possible :
+  Tetromino.tetromino -> board -> Tetromino.tetromino
+(** [get_lowest_possible t] is [t'], the lowest possible valid place of
+    [t] in the board *)
+
+val draw_tetromino :
+  ?draw_white:bool ->
+  ?white_out:bool ->
+  ?preview:bool ->
+  Tetromino.tetromino ->
+  unit
 (** [draw_tetromino t] draws [t] to the GUI window. *)
 
-(** [clear_board b] clears the board [b] by setting all elements to [' '] *)
 val clear_board : board -> unit
+(** [clear_board b] clears the board [b] by setting all elements to
+    [' '] *)
 
 val clear_lines : board -> unit
 (** [clear_lines b] edits [b] to [b'], where [b'] is [b] where all rows
@@ -61,6 +72,6 @@ val update_board : Tetromino.tetromino -> board -> unit
     part of [b]. Should only be called once the tetris piece is dropped
     or placed. *)
 
-(** [drop t b] calls [update_board t' b], where [t'] is [get_lowest_possible t] *)
 val drop : Tetromino.tetromino -> board -> unit
-
+(** [drop t b] calls [update_board t' b], where [t'] is
+    [get_lowest_possible t] *)
