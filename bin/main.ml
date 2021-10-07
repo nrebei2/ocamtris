@@ -53,6 +53,9 @@ and hold_piece () =
       spawn_piece ()
 
 and move_piece f =
+  (* TODO: Instead of just [()] try moving the piece left/right/up/down
+     till it fits, probably at a maximum of two steps. There are most
+     liekly specifics somewhere online. *)
   if check_valid (f !current_piece) board = false then ()
   else (
     draw_tetromino ~white_out:true !current_piece;
