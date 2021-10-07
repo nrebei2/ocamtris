@@ -1,9 +1,5 @@
 (* Board implementation*)
 
-(* TODO: Feel like there is a lot of optimization to be done in drawing
-   the board. For instance, calling [draw_outline] after moving a piece
-   <- could maybe just draw needed outline or use a picture instead *)
-
 open Graphics
 open Tetromino
 
@@ -89,29 +85,12 @@ let draw_2D_aray
 let draw_board b = draw_2D_aray ~draw_white:true b 0 0
 
 let draw_tetromino
-    ?draw_white:(b = false)
     ?white_out:(b2 = false)
     ?preview:(b3 = false)
     t =
   match t with
   | { name; state; col = c; row = r } ->
-      draw_2D_aray ~draw_white:b ~white_out:b2 ~preview:b3 state r c
-
-(** Gets height of board (highest row a tetis piece is in). Not used,
-    and isnt even right lol. However, could be used later if a bot is
-    made (checks all possible drops for a piece and uses [get_height] to
-    determine if a drop is better than another) *)
-let get_height b =
-  let heights = Array.make columns 0 in
-  Array.fold_right
-    (fun x acc ->
-      Array.iteri
-        (fun i x ->
-          if x <> ' ' then Array.set heights i (Array.get heights i + 1)
-          else ())
-        x)
-    b ();
-  List.fold_left max 0 (Array.to_list heights)
+      draw_2D_aray ~white_out:b2 ~preview:b3 state r c
 
 let copy_to_2D_array b1 b2 =
   for r = 0 to Array.length b1 - 1 do
@@ -127,20 +106,20 @@ let clear_board b =
     done
   done
 
+let filled =
+  Array.fold_left
+    (fun acc x ->
+      acc && List.mem x [ 'i'; 'o'; 't'; 's'; 'z'; 'j'; 'l' ])
+    true
+
+let cleared_rows b =
+  List.length
+    (List.rev
+       (Array.fold_left
+          (fun acc x -> if filled x then Array.copy x :: acc else acc)
+          [] b))
+
 let clear_lines b =
-  let filled =
-    Array.fold_left
-      (fun acc x ->
-        acc && List.mem x [ 'i'; 'o'; 't'; 's'; 'z'; 'j'; 'l' ])
-      true
-  in
-  let cleared_rows =
-    List.length
-      (List.rev
-         (Array.fold_left
-            (fun acc x -> if filled x then Array.copy x :: acc else acc)
-            [] b))
-  in
   let uncleared_rows =
     List.rev
       (Array.fold_left
@@ -152,14 +131,14 @@ let clear_lines b =
            else Array.copy x :: acc)
          [] b)
   in
-  (* TODO: [cleared_rows] is the number of cleared rows, use mutable
+  (* TODO: [cleared_rows b] is the number of cleared rows, use mutable
      data type (ref) to increase lines cleared/score *)
-  if cleared_rows = 0 then false
+  if cleared_rows b = 0 then false
   else
     let rec make n =
       match n with
       | 0 -> []
-      | _ -> Array.make columns ' ' :: make (n - 1)
+      | _ -> Array.make (Array.length b.(0)) ' ' :: make (n - 1)
     in
     let new_board =
       make (rows - List.length uncleared_rows) @ uncleared_rows

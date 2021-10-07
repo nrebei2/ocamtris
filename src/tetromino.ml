@@ -10,7 +10,7 @@ type tetromino = {
 let i_piece =
   {
     name = 'i';
-    state = [| [| 'i'; 'i'; 'i'; 'i' |] |];
+    state = [| [| ' '; ' '; ' '; ' ' |]; [| 'i'; 'i'; 'i'; 'i' |]; [| ' '; ' '; ' '; ' ' |]; [| ' '; ' '; ' '; ' ' |] |];
     col = 3;
     row = 0;
   }
@@ -85,13 +85,37 @@ let move_right t = { t with col = t.col + 1 }
 
 let move_down t = { t with row = t.row + 1 }
 
-(** TODO: Not actually random, look into seeds or something *)
-let random_tetromino () =
-  let choices =
-    [| i_piece; o_piece; t_Piece; s_piece; z_piece; j_Piece; l_piece |]
+(* https://en.wikipedia.org/wiki/Fisher–Yates_shuffle *)
+let shuffle x =
+  let rec shuffle_aux n x =
+    match n with
+    | 0 -> ()
+    | _ ->
+        let rand = Random.int n in
+        let tmp = x.(rand) in
+        x.(rand) <- x.(n);
+        x.(n) <- tmp;
+        shuffle_aux (n - 1) x
   in
-  let rand = Random.int (Array.length choices) in
-  Array.get choices rand
+
+  shuffle_aux (Array.length x - 1) x;
+  x
+
+let bag = ref []
+
+let rec random_tetromino () =
+  match !bag with
+  | [] ->
+    Random.self_init ();
+      bag :=
+        [|
+          i_piece; o_piece; t_Piece; s_piece; z_piece; j_Piece; l_piece;
+        |]
+        |> shuffle |> Array.to_list;
+      random_tetromino ()
+  | h :: t ->
+      bag := t;
+      h
 
 let match_name_to_default c =
   match c with

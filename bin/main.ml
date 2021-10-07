@@ -55,9 +55,10 @@ and hold_piece () =
 and move_piece f =
   if check_valid (f !current_piece) board = false then ()
   else (
-    draw_tetromino ~draw_white:true !current_piece;
+    draw_tetromino ~white_out:true !current_piece;
+    draw_tetromino ~white_out:true
+      (get_lowest_possible !current_piece board);
     current_piece := f !current_piece;
-    draw_board board;
     draw_preview ();
     draw_tetromino !current_piece)
 
@@ -79,9 +80,8 @@ and move_piece_down () =
   if check_valid (move_down !current_piece) board = false then
     complete_move true
   else (
-    draw_tetromino ~draw_white:true !current_piece;
+    draw_tetromino ~white_out:true !current_piece;
     current_piece := move_down !current_piece;
-    draw_board board;
     draw_tetromino !current_piece)
 
 and process_main_requests () =
@@ -106,7 +106,8 @@ and process_main_requests () =
    | _ -> ());
   process_main_requests ()
 
-(* TODO *)
+(* TODO: Respresent leaderboard as json and use Yojson to read/write
+   data *)
 and display_leaderboard () =
   moveto 100 100;
   draw_string "leaderboard here"
