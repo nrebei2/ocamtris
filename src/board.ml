@@ -174,7 +174,7 @@ let update_board t b =
         (fun c v -> if v <> ' ' then b.(r + t.row).(c + t.col) <- v)
         rowv)
     t.state
-
+    
 let rec get_lowest_possible t b =
   let new_t = Tetromino.move_down t in
   if check_valid new_t b then get_lowest_possible new_t b else t

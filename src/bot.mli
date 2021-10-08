@@ -1,7 +1,7 @@
-val get_best_possible_drop : Board.board -> int -> unit
-(** [get_best_possible_drop b depth] derives [t] by
-    iterating thorough all possible drops of the current tetromino (and
-    possibly looking ahead if [depth >= 2], as [depth] is the number of
-    pieces the bot is looking at) and determining the best possible one
-    through a score function, calculated with the help of
+val get_best_possible_drop :
+  Tetromino.tetromino -> Board.board -> Tetromino.tetromino
+(** [get_best_possible_drop t b] is [t']. [t'] is derived by iterating
+    through all rotations and positions of [t], then determining the
+    best possible drop through a score function, calculated with the
+    help of
     https://codemyroad.wordpress.com/2013/04/14/tetris-ai-the-near-perfect-player/. *)

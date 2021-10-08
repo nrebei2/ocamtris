@@ -2,6 +2,7 @@ open Graphics
 open Game
 open Board
 open Tetromino
+open Bot
 
 let playable = ref true
 
@@ -134,6 +135,16 @@ and process_game_over_requests () =
         ();
         process_game_over_requests ()
 
+and process_bot () =
+  draw_tetromino ~white_out:true !current_piece;
+  draw_tetromino ~white_out:true
+    (get_lowest_possible !current_piece board);
+  current_piece := get_best_possible_drop !current_piece board;
+  draw_tetromino !current_piece;
+  (* Unix.sleepf 0.5; *)
+  complete_move true;
+  process_bot ()
+
 and main_scene () =
   playable := true;
   clear_graph ();
@@ -141,6 +152,7 @@ and main_scene () =
   draw_outline ();
   spawn_piece ();
   process_main_requests ()
+  (* process_bot () *)
 
 (* Execute the game *)
 let () =

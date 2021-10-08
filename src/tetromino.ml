@@ -10,7 +10,7 @@ type tetromino = {
 let i_piece =
   {
     name = 'i';
-    state = [| [| ' '; ' '; ' '; ' ' |]; [| 'i'; 'i'; 'i'; 'i' |]; [| ' '; ' '; ' '; ' ' |]; [| ' '; ' '; ' '; ' ' |] |];
+    state = [| [| 'i'; 'i'; 'i'; 'i' |] |];
     col = 3;
     row = 0;
   }
@@ -79,11 +79,12 @@ let rotate_left t = { t with state = rotate_array_left t.state }
 
 let rotate_right t = t |> rotate_left |> rotate_left |> rotate_left
 
-let move_left t = { t with col = t.col - 1 }
+let move_left  t = { t with col = t.col - 1 }
 
 let move_right t = { t with col = t.col + 1 }
 
 let move_down t = { t with row = t.row + 1 }
+
 
 (* https://en.wikipedia.org/wiki/Fisher–Yates_shuffle *)
 let shuffle x =

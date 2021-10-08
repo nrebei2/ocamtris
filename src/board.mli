@@ -38,11 +38,6 @@ val draw_board : board -> unit
 (* [draw_title ()] draws the Ocamtris title at the top of the screen. *)
 val draw_title : unit -> unit
 
-val get_lowest_possible :
-  Tetromino.tetromino -> board -> Tetromino.tetromino
-(** [get_lowest_possible t b] is [t'], the lowest possible valid place
-    of [t] in [b] *)
-
 val draw_tetromino :
   ?white_out:bool ->
   ?preview:bool ->
@@ -72,6 +67,10 @@ val check_valid : Tetromino.tetromino -> board -> bool
 val update_board : Tetromino.tetromino -> board -> unit
 (** [update_board t b] edits [b] to contain [t]. *)
 
+val get_lowest_possible :
+  Tetromino.tetromino -> board -> Tetromino.tetromino
+(** [get_lowest_possible t b] is [t'], the lowest possible valid place
+    of [t] in [b] *)
+
 val drop : Tetromino.tetromino -> board -> unit
-(** [drop t b] calls [update_board t' b], where [t'] is
-    [get_lowest_possible t] *)
+(** [drop t b] calls [update_board (get_lowest_possible t) b] *)
