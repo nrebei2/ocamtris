@@ -2,6 +2,7 @@ open OUnit2
 open Game
 open Tetromino
 open Board
+open Bot
 
 (** Adopted from A2 [pp_string s] pretty-prints string [s]. *)
 let pp_string s = s
@@ -53,7 +54,6 @@ let board_tests =
            b;
          b)
         ~printer:(pp_board pp_string) );
-        
     ( "update piece on board" >:: fun _ ->
       assert_equal
         [| [| 'i'; ' ' |]; [| ' '; ' ' |] |]
@@ -63,34 +63,108 @@ let board_tests =
            b;
          b)
         ~printer:(pp_board pp_string) );
-
     ( "valid drop" >:: fun _ ->
       assert_equal true
         (check_valid i_piece board)
         ~printer:string_of_bool );
-
     ( "clear_lines" >:: fun _ ->
-      assert_equal
-        true
-        (let b = [| [| ' '; ' ' |]; [| ' '; ' ' |] |] in drop
+      assert_equal true
+        (let b = [| [| ' '; ' ' |]; [| ' '; ' ' |] |] in
+         drop
            {
              name = 't';
-             state =
-               [|
-                 [| 'l'; 'l';|];
-               |];
+             state = [| [| 'l'; 'l' |] |];
              col = 0;
              row = 0;
            }
            b;
          clear_lines b)
-        ~printer:(string_of_bool) );
+        ~printer:string_of_bool );
   ]
 
 let tetromino_tests = []
 
+let bot_tests =
+  [
+    ( "landing_height" >:: fun _ ->
+      assert_equal 0.5
+        (let b = [| [| ' '; ' ' |]; [| ' '; ' ' |] |] in
+         landing_height
+           {
+             name = 't';
+             state = [| [| 'l'; 'l' |] |];
+             col = 0;
+             row = 0;
+           }
+           b)
+        ~printer:string_of_float );
+    ( "landing_height" >:: fun _ ->
+      assert_equal 1.
+        (let b = [| [| ' '; ' ' |]; [| ' '; 'l' |] |] in
+         landing_height
+           {
+             name = 't';
+             state = [| [| 'l'; 'l' |]; [| 'l'; ' ' |] |];
+             col = 0;
+             row = 0;
+           }
+           b)
+        ~printer:string_of_float );
+    ( "row_transitions" >:: fun _ ->
+      assert_equal 8.
+        (let b =
+           [| [| 'l'; ' '; 'l'; ' '; 'l'; ' '; 'l'; ' '; 'l' |] |]
+         in
+         row_transitions b)
+        ~printer:string_of_float );
+    ( "row_transitions" >:: fun _ ->
+      assert_equal 8.
+        (let b =
+           [|
+             [| 'l' |];
+             [| ' ' |];
+             [| 'l' |];
+             [| ' ' |];
+             [| 'l' |];
+             [| ' ' |];
+             [| 'l' |];
+             [| ' ' |];
+             [| 'l' |];
+           |]
+         in
+         column_transitions b)
+        ~printer:string_of_float );
+    ( "get_well_sum" >:: fun _ ->
+      assert_equal 3.
+        (let b =
+           [|
+             [| 'l'; 'l'; ' '; 'l'; 'l' |];
+             [| 'l'; ' '; ' '; 'l'; 'l' |];
+             [| 'l'; ' '; ' '; ' '; ' ' |];
+           |]
+         in
+         get_well_sum b)
+        ~printer:string_of_float );
+    ( "get_well_sum" >:: fun _ ->
+      assert_equal 6.
+        (let b =
+           [|
+             [| 'l'; 'l'; ' '; 'l'; 'l' |];
+             [| 'l'; 'l'; ' '; 'l'; 'l' |];
+             [| 'l'; 'l'; ' '; 'l'; 'l' |];
+           |]
+         in
+         get_well_sum b)
+        ~printer:string_of_float );
+    ( "holes" >:: fun _ ->
+      assert_equal 2.
+        (let b = [| [| 'l'; 'l' |]; [| ' '; ' ' |] |] in
+         holes b)
+        ~printer:string_of_float );
+  ]
+
 let suite =
   "test suite for ocamtris"
-  >::: List.flatten [ board_tests; tetromino_tests ]
+  >::: List.flatten [ board_tests; tetromino_tests; bot_tests ]
 
 let _ = run_test_tt_main suite

@@ -22,6 +22,10 @@ let rec spawn_piece () =
   if check_valid !current_piece board then draw_tetromino !current_piece
   else game_over ()
 
+and clear_piece t =
+  draw_tetromino ~white_out:true t;
+  draw_tetromino ~white_out:true (get_lowest_possible t board)
+
 and clear_draw_next_piece () =
   draw_tetromino ~white_out:true
     { !current_piece with col = 12; row = 2 };
@@ -34,8 +38,7 @@ and clear_draw_held_piece tmp =
       draw_tetromino ~white_out:true
         { !current_piece with col = -4; row = 2 };
       draw_tetromino { x with col = -4; row = 2 };
-      draw_tetromino ~white_out:true tmp;
-      draw_tetromino ~white_out:true (get_lowest_possible tmp board)
+      clear_piece tmp
 
 and draw_preview () =
   draw_tetromino ~preview:true
@@ -59,9 +62,7 @@ and move_piece f =
      liekly specifics somewhere online. *)
   if check_valid (f !current_piece) board = false then ()
   else (
-    draw_tetromino ~white_out:true !current_piece;
-    draw_tetromino ~white_out:true
-      (get_lowest_possible !current_piece board);
+    clear_piece !current_piece;
     current_piece := f !current_piece;
     draw_preview ();
     draw_tetromino !current_piece)
@@ -136,13 +137,27 @@ and process_game_over_requests () =
         process_game_over_requests ()
 
 and process_bot () =
-  draw_tetromino ~white_out:true !current_piece;
-  draw_tetromino ~white_out:true
-    (get_lowest_possible !current_piece board);
-  current_piece := get_best_possible_drop !current_piece board;
-  draw_tetromino !current_piece;
-  (* Unix.sleepf 0.5; *)
-  complete_move true;
+  clear_piece !current_piece;
+  let process_get_best_request t =
+    match get_best_possible_drop !current_piece board t with
+    | "drop", x ->
+        current_piece := x;
+        draw_tetromino !current_piece;
+        Unix.sleepf 1.;
+        complete_move true
+    | "hold", x ->
+        hold_piece ();
+        clear_piece !current_piece;
+        current_piece := x;
+        draw_tetromino !current_piece;
+        draw_preview ();
+        Unix.sleepf 1.;
+        complete_move true
+    | _ -> ()
+  in
+  (match !held_piece with
+  | None -> process_get_best_request !next_piece
+  | Some x -> process_get_best_request x);
   process_bot ()
 
 and main_scene () =
@@ -151,6 +166,7 @@ and main_scene () =
   (* draw_title (); *)
   draw_outline ();
   spawn_piece ();
+  move_piece_down ();
   process_main_requests ()
   (* process_bot () *)
 
