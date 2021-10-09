@@ -17,35 +17,38 @@ type board = char array array
     filling a cell at the position, corresponding to [t.state] for a
     tetromino t.*)
 
-(* [board] is the current state of the game board, initially created
-   with no blocks filling any cells *)
-val board : board
-
+type player = {
+  board : board;
+  board_pos : int * int;
+  current_piece : Tetromino.tetromino ref;
+  next_piece : Tetromino.tetromino ref;
+  held_piece : Tetromino.tetromino option ref;
+  can_hold : bool ref;
+}
 (* [board_pos (x, y)] is the bottom left position of board at position
    (x, y) *)
-val board_pos : int * int
+
+val player1 : player
+val player2 : player
 
 (* [tile_size] is the side length of each cell of the board in pixels *)
 val tile_size : int
 
 (* [draw_outline ()] draws the grid outline of the board to the GUI
    window *)
-val draw_outline : unit -> unit
+val draw_outline : player -> unit
 
 (* [draw_board b] draws the entire board [b] to the GUI window. *)
-val draw_board : board -> unit
+val draw_board : player -> unit
 
 (* [draw_title ()] draws the Ocamtris title at the top of the screen. *)
 val draw_title : unit -> unit
 
 val draw_tetromino :
-  ?white_out:bool ->
-  ?preview:bool ->
-  Tetromino.tetromino ->
-  unit
-(** [draw_tetromino t] draws [t] to the GUI window. 
-    white_out correponds to drawing over the piece with white
-    preiew correponds to drawing the piece as a preview *)
+  ?white_out:bool -> ?preview:bool -> Tetromino.tetromino -> player -> unit
+(** [draw_tetromino t] draws [t] to the GUI window. white_out correponds
+    to drawing over the piece with white preiew correponds to drawing
+    the piece as a preview *)
 
 val clear_board : board -> unit
 (** [clear_board b] clears [b] by setting all elements to [' '] *)

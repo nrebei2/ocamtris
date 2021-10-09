@@ -9,9 +9,34 @@ let columns = 10
 
 type board = char array array
 
-let board = Array.make_matrix rows columns ' '
+type player = {
+  board : board;
+  board_pos : int * int;
+  current_piece : Tetromino.tetromino ref;
+  next_piece : Tetromino.tetromino ref;
+  held_piece : Tetromino.tetromino option ref;
+  can_hold : bool ref;
+}
 
-let board_pos = (130, 50)
+let player1 =
+  {
+    board = Array.make_matrix rows columns ' ';
+    board_pos = (150, 50);
+    current_piece = ref (random_tetromino ());
+    next_piece = ref (random_tetromino ());
+    held_piece = ref None;
+    can_hold = ref true
+  }
+
+let player2 =
+  {
+    board = Array.make_matrix rows columns ' ';
+    board_pos = (850, 50);
+    current_piece = ref (random_tetromino ());
+    next_piece = ref (random_tetromino ());
+    held_piece = ref None;
+    can_hold = ref true
+  }
 
 let tile_size = 30
 
@@ -27,27 +52,27 @@ let draw_title () =
     (780 - snd (text_size "Ocamtris"));
   draw_string "Ocamtris"
 
-let draw_outline () =
+let draw_outline p =
   set_color black;
   for i = 0 to columns do
-    moveto (fst board_pos + (tile_size * i)) (snd board_pos);
+    moveto (fst p.board_pos + (tile_size * i)) (snd p.board_pos);
     lineto
-      (fst board_pos + (tile_size * i))
-      (snd board_pos + (tile_size * rows))
+      (fst p.board_pos + (tile_size * i))
+      (snd p.board_pos + (tile_size * rows))
   done;
   for j = 0 to rows do
-    moveto (fst board_pos) (snd board_pos + (tile_size * j));
+    moveto (fst p.board_pos) (snd p.board_pos + (tile_size * j));
     lineto
-      (fst board_pos + (tile_size * columns))
-      (snd board_pos + (tile_size * j))
+      (fst p.board_pos + (tile_size * columns))
+      (snd p.board_pos + (tile_size * j))
   done
 
 (* TODO: change to pasting a picture instead *)
-let color_cell color r c =
+let color_cell color r c p =
   set_color color;
   fill_rect
-    ((c * tile_size) + fst board_pos)
-    (((rows - r - 1) * tile_size) + snd board_pos)
+    ((c * tile_size) + fst p.board_pos)
+    (((rows - r - 1) * tile_size) + snd p.board_pos)
     tile_size tile_size
 
 let draw_2D_aray
@@ -56,7 +81,8 @@ let draw_2D_aray
     ?preview:(b3 = false)
     ar
     row_start
-    column_start =
+    column_start
+    p =
   for r = 0 to Array.length ar - 1 do
     for c = 0 to Array.length ar.(0) - 1 do
       let r' = r + row_start in
@@ -64,33 +90,32 @@ let draw_2D_aray
       if b3 then
         match ar.(r).(c) with
         | ' ' -> ()
-        | _ -> color_cell (rgb 200 200 200) r' c'
+        | _ -> color_cell (rgb 200 200 200) r' c' p
       else if b2 then
-        match ar.(r).(c) with ' ' -> () | _ -> color_cell white r' c'
+        match ar.(r).(c) with
+        | ' ' -> ()
+        | _ -> color_cell white r' c' p
       else
         match ar.(r).(c) with
-        | 'i' -> color_cell cyan r' c'
-        | 'o' -> color_cell yellow r' c'
-        | 't' -> color_cell magenta r' c'
-        | 's' -> color_cell green r' c'
-        | 'z' -> color_cell red r' c'
-        | 'j' -> color_cell blue r' c'
-        | 'l' -> color_cell (rgb 255 165 0) r' c'
-        | ' ' -> if b then color_cell white r' c' else ()
+        | 'i' -> color_cell cyan r' c' p
+        | 'o' -> color_cell yellow r' c' p
+        | 't' -> color_cell magenta r' c' p
+        | 's' -> color_cell green r' c' p
+        | 'z' -> color_cell red r' c' p
+        | 'j' -> color_cell blue r' c' p
+        | 'l' -> color_cell (rgb 255 165 0) r' c' p
+        | ' ' -> if b then color_cell white r' c' p else ()
         | _ -> failwith "shouldnt happen ¯\\_(ツ)_/¯"
     done
   done;
-  draw_outline ()
+  draw_outline p
 
-let draw_board b = draw_2D_aray ~draw_white:true b 0 0
+let draw_board p = draw_2D_aray ~draw_white:true p.board 0 0 p
 
-let draw_tetromino
-    ?white_out:(b2 = false)
-    ?preview:(b3 = false)
-    t =
+let draw_tetromino ?white_out:(b2 = false) ?preview:(b3 = false) t p =
   match t with
   | { name; state; col = c; row = r } ->
-      draw_2D_aray ~white_out:b2 ~preview:b3 state r c
+      draw_2D_aray ~white_out:b2 ~preview:b3 state r c p
 
 let copy_to_2D_array b1 b2 =
   for r = 0 to Array.length b1 - 1 do
@@ -174,7 +199,7 @@ let update_board t b =
         (fun c v -> if v <> ' ' then b.(r + t.row).(c + t.col) <- v)
         rowv)
     t.state
-    
+
 let rec get_lowest_possible t b =
   let new_t = Tetromino.move_down t in
   if check_valid new_t b then get_lowest_possible new_t b else t

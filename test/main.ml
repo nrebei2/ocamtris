@@ -65,7 +65,7 @@ let board_tests =
         ~printer:(pp_board pp_string) );
     ( "valid drop" >:: fun _ ->
       assert_equal true
-        (check_valid i_piece board)
+        (check_valid i_piece player1.board)
         ~printer:string_of_bool );
     ( "clear_lines" >:: fun _ ->
       assert_equal true
