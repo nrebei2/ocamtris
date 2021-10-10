@@ -8,6 +8,7 @@ type tetromino = {
   state : char array array;
   col : int;
   row : int;
+  rot : int
 }
 (** [tetromino] is the tetromino of a tetromino placed on the board
     [name] is the name of the piece [state] is how the piece looks like
@@ -48,8 +49,10 @@ val move_right : tetromino -> tetromino
 val move_down : tetromino -> tetromino
 (** [move_down t] is [t'] where [t'] is [t] moved down one cell*)
 
-val random_tetromino : unit -> tetromino
+(* val random_tetromino : unit -> tetromino *)
 (** [random_tetromino ()] is a random tetromino*)
+
+val get_from_bag : int -> tetromino
 
 val match_name_to_default : char -> tetromino
 (** [match_name_to_default c] is one of the above default values based

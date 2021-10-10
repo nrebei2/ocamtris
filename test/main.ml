@@ -42,6 +42,7 @@ let board_tests =
              state = [| [| 'i'; 'o' |] |];
              row = 0;
              col = 0;
+             rot = 0
            }
            b;
          drop
@@ -50,6 +51,7 @@ let board_tests =
              state = [| [| 'i'; ' ' |] |];
              row = 0;
              col = 0;
+             rot = 0
            }
            b;
          b)
@@ -59,7 +61,7 @@ let board_tests =
         [| [| 'i'; ' ' |]; [| ' '; ' ' |] |]
         (let b = [| [| ' '; ' ' |]; [| ' '; ' ' |] |] in
          update_board
-           { name = 't'; state = [| [| 'i' |] |]; row = 0; col = 0 }
+           { name = 't'; state = [| [| 'i' |] |]; row = 0; col = 0; rot =0 }
            b;
          b)
         ~printer:(pp_board pp_string) );
@@ -75,7 +77,7 @@ let board_tests =
              name = 't';
              state = [| [| 'l'; 'l' |] |];
              col = 0;
-             row = 0;
+             row = 0; rot = 0
            }
            b;
          clear_lines b)
@@ -94,7 +96,7 @@ let bot_tests =
              name = 't';
              state = [| [| 'l'; 'l' |] |];
              col = 0;
-             row = 0;
+             row = 0; rot = 0
            }
            b)
         ~printer:string_of_float );
@@ -106,7 +108,7 @@ let bot_tests =
              name = 't';
              state = [| [| 'l'; 'l' |]; [| 'l'; ' ' |] |];
              col = 0;
-             row = 0;
+             row = 0; rot = 0
            }
            b)
         ~printer:string_of_float );

@@ -115,8 +115,14 @@ let compare_score b d1 d2 =
   let score_d2 = score d2 b in
   if score_d1 >= score_d2 then d1 else d2
 
+
+let rec positions f t b =
+  match check_valid (t |> f) b with 
+  | true -> (t |> f) :: positions f (t |> f) b
+  | false -> []
+
 (* *)
-let rec generate_all_possible_drops t =
+let rec generate_all_possible_drops t b =
   List.fold_left
     (fun acc x ->
       x :: (x |> rotate_left)
@@ -125,21 +131,12 @@ let rec generate_all_possible_drops t =
     [] [ t ]
   |> List.fold_left
        (fun acc x ->
-         let l, r =
-           (-x.col, columns - Array.length x.state.(0) - x.col)
-         in
-         let rec generate_pieces max cur =
-           if cur > max then []
-           else
-             { x with col = x.col + cur }
-             :: generate_pieces max (cur + 1)
-         in
-         generate_pieces r l @ acc)
+         x :: (positions move_left x b) @ (positions move_right x b) @ acc)
        []
 
 let rec get_best_possible_drop t b next_piece =
-  let drops = generate_all_possible_drops t in
-  let next_drops = generate_all_possible_drops next_piece in
+  let drops = generate_all_possible_drops t b in
+  let next_drops = generate_all_possible_drops next_piece b in
   let rec get_best drops b =
     match drops with
     | [] -> failwith "x"

@@ -20,6 +20,7 @@ type board = char array array
 type player = {
   board : board;
   board_pos : int * int;
+  bag_pos : int ref;
   current_piece : Tetromino.tetromino ref;
   next_piece : Tetromino.tetromino ref;
   held_piece : Tetromino.tetromino option ref;

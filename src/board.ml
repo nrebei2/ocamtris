@@ -12,6 +12,7 @@ type board = char array array
 type player = {
   board : board;
   board_pos : int * int;
+  bag_pos : int ref;
   current_piece : Tetromino.tetromino ref;
   next_piece : Tetromino.tetromino ref;
   held_piece : Tetromino.tetromino option ref;
@@ -22,8 +23,9 @@ let player1 =
   {
     board = Array.make_matrix rows columns ' ';
     board_pos = (150, 50);
-    current_piece = ref (random_tetromino ());
-    next_piece = ref (random_tetromino ());
+    bag_pos = ref 1;
+    current_piece = ref (get_from_bag 0);
+    next_piece = ref (get_from_bag 1);
     held_piece = ref None;
     can_hold = ref true
   }
@@ -32,8 +34,9 @@ let player2 =
   {
     board = Array.make_matrix rows columns ' ';
     board_pos = (850, 50);
-    current_piece = ref (random_tetromino ());
-    next_piece = ref (random_tetromino ());
+    bag_pos = ref 1;
+    current_piece = ref (get_from_bag 0);
+    next_piece = ref (get_from_bag 1);
     held_piece = ref None;
     can_hold = ref true
   }

@@ -5,62 +5,95 @@ type tetromino = {
   state : char array array;
   col : int;
   row : int;
+  rot : int
 }
 
 let i_piece =
   {
     name = 'i';
-    state = [| [| 'i'; 'i'; 'i'; 'i' |] |];
-    col = 3;
-    row = 0;
+    state =
+      [|
+        [| ' '; ' '; ' '; ' '; ' ' |];
+        [| ' '; ' '; ' '; ' '; ' ' |];
+        [| ' '; 'i'; 'i'; 'i'; 'i' |];
+        [| ' '; ' '; ' '; ' '; ' ' |];
+        [| ' '; ' '; ' '; ' '; ' ' |];
+      |];
+    col = 2;
+    row = -1;
+    rot = 0
   }
 
 let o_piece =
   {
     name = 'o';
-    state = [| [| 'o'; 'o' |]; [| 'o'; 'o' |] |];
-    col = 3;
+    state =
+      [|
+        [|'o'; 'o' |]; [| 'o'; 'o' |];
+      |];
+    col = 4;
     row = 0;
+    rot = 0
   }
 
 let t_Piece =
   {
     name = 't';
-    state = [| [| ' '; 't'; ' ' |]; [| 't'; 't'; 't' |] |];
+    state =
+      [|
+        [| ' '; 't'; ' ' |]; [| 't'; 't'; 't' |]; [| ' '; ' '; ' ' |];
+      |];
     col = 3;
     row = 0;
+    rot = 0
   }
 
 let s_piece =
   {
     name = 's';
-    state = [| [| ' '; 's'; 's' |]; [| 's'; 's'; ' ' |] |];
+    state =
+      [|
+        [| ' '; 's'; 's' |]; [| 's'; 's'; ' ' |]; [| ' '; ' '; ' ' |];
+      |];
     col = 3;
     row = 0;
+    rot = 0
   }
 
 let z_piece =
   {
     name = 'z';
-    state = [| [| 'z'; 'z'; ' ' |]; [| ' '; 'z'; 'z' |] |];
+    state =
+      [|
+        [| 'z'; 'z'; ' ' |]; [| ' '; 'z'; 'z' |]; [| ' '; ' '; ' ' |];
+      |];
     col = 3;
     row = 0;
+    rot = 0
   }
 
 let j_Piece =
   {
     name = 'j';
-    state = [| [| 'j'; ' '; ' ' |]; [| 'j'; 'j'; 'j' |] |];
+    state =
+      [|
+        [| 'j'; ' '; ' ' |]; [| 'j'; 'j'; 'j' |]; [| ' '; ' '; ' ' |];
+      |];
     col = 3;
     row = 0;
+    rot = 0
   }
 
 let l_piece =
   {
     name = 'l';
-    state = [| [| ' '; ' '; 'l' |]; [| 'l'; 'l'; 'l' |] |];
+    state =
+      [|
+        [| ' '; ' '; 'l' |]; [| 'l'; 'l'; 'l' |]; [| ' '; ' '; ' ' |];
+      |];
     col = 3;
     row = 0;
+    rot = 0
   }
 
 let rec rotate_array_left ar =
@@ -75,18 +108,17 @@ let rec rotate_array_left ar =
 (* TODO: Change col and row based on rotation, save it till whoever
    wants to bother with the rotation specifics:
    https://tetris.fandom.com/wiki/SRS *)
-let rotate_left t = { t with state = rotate_array_left t.state }
+let rotate_left t = { t with state = rotate_array_left t.state; rot = if t.rot = 3 then 0 else t.rot + 1 }
 
 let rotate_right t = t |> rotate_left |> rotate_left |> rotate_left
 
-let move_left  t = { t with col = t.col - 1 }
+let move_left t = { t with col = t.col - 1 }
 
 let move_right t = { t with col = t.col + 1 }
 
 let move_down t = { t with row = t.row + 1 }
 
-
-(* https://en.wikipedia.org/wiki/Fisher–Yates_shuffle *)
+(* Implementation of https://en.wikipedia.org/wiki/Fisher–Yates_shuffle *)
 let shuffle x =
   let rec shuffle_aux n x =
     match n with
@@ -102,12 +134,12 @@ let shuffle x =
   shuffle_aux (Array.length x - 1) x;
   x
 
-let bag = ref []
+let bag = ref [||]
 
-let rec random_tetromino () =
+(* let rec random_tetromino () =
   match !bag with
   | [] ->
-    Random.self_init ();
+      Random.self_init ();
       bag :=
         [|
           i_piece; o_piece; t_Piece; s_piece; z_piece; j_Piece; l_piece;
@@ -116,7 +148,14 @@ let rec random_tetromino () =
       random_tetromino ()
   | h :: t ->
       bag := t;
-      h
+      h *)
+
+let get_from_bag n =
+  try !bag.(n) with
+  | _ -> bag :=  [|
+    i_piece; o_piece; t_Piece; s_piece; z_piece; j_Piece; l_piece;
+  |]
+  |> shuffle |> Array.append !bag; !bag.(n)
 
 let match_name_to_default c =
   match c with
