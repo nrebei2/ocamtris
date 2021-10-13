@@ -20,21 +20,26 @@ type board = char array array
 (* [tile_size] is the side length of each cell of the board in pixels *)
 val tile_size : int
 
-(* [draw_outline ()] draws the grid outline of the board to the GUI
-   window *)
+(* [draw_outline p] draws the grid outline of the board to the GUI
+   window, with its lower left position at [p]*)
 val draw_outline : int * int -> unit
 
-(* [draw_board b] draws the entire board [b] to the GUI window. *)
+(* [draw_board b p] draws the entire board [b] to the GUI window, with
+   its lower left position at [p] *)
 val draw_board : board -> int * int -> unit
 
 (* [draw_title ()] draws the Ocamtris title at the top of the screen. *)
 val draw_title : unit -> unit
 
 val draw_tetromino :
-  ?white_out:bool -> ?preview:bool -> Tetromino.tetromino -> int * int -> unit
-(** [draw_tetromino t] draws [t] to the GUI window. white_out correponds
-    to drawing over the piece with white preiew correponds to drawing
-    the piece as a preview *)
+  ?white_out:bool ->
+  ?preview:bool ->
+  Tetromino.tetromino ->
+  int * int ->
+  unit
+(** [draw_tetromino t p] draws [t] to the board with lower left position
+    at [p]. white_out correponds to drawing over the piece with white.
+    preview correponds to drawing the piece as a preview (gray)*)
 
 val clear_board : board -> unit
 (** [clear_board b] clears [b] by setting all elements to [' '] *)

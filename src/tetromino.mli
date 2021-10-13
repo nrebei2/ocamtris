@@ -49,16 +49,16 @@ val move_right : tetromino -> tetromino
 val move_down : tetromino -> tetromino
 (** [move_down t] is [t'] where [t'] is [t] moved down one cell*)
 
-(* val random_tetromino : unit -> tetromino *)
-(** [random_tetromino ()] is a random tetromino*)
-
+(** [get_from_bag i] is the ith element of the bag. The size of bag will recursively increase until i is less than the length of the bag *)
 val get_from_bag : int -> tetromino
 
+(** [reset_bag ()] sets the bag as an empty array*)
 val reset_bag : unit -> unit
 
 val match_name_to_default : char -> tetromino
 (** [match_name_to_default c] is one of the above default values based
     on [c] Example: [match_name_to_default 'i'] is [i_piece]*)
 
+(* used when determining wall kicks, retrieved from https://tetris.wiki/Super_Rotation_System#Wall_Kicks*)
 val offset_data : (int * int) array array
 val i_offset_data : (int * int) array array

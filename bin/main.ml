@@ -16,6 +16,7 @@ type difficulty =
   | Fair
   | Hard
 
+  (* initialize game given a mode and difficulty*)
 let init_game m d =
   {
     over = false;
