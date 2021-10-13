@@ -136,26 +136,15 @@ let shuffle x =
 
 let bag = ref [||]
 
-(* let rec random_tetromino () =
-  match !bag with
-  | [] ->
-      Random.self_init ();
-      bag :=
-        [|
-          i_piece; o_piece; t_Piece; s_piece; z_piece; j_Piece; l_piece;
-        |]
-        |> shuffle |> Array.to_list;
-      random_tetromino ()
-  | h :: t ->
-      bag := t;
-      h *)
-
-let get_from_bag n =
+let rec get_from_bag n =
   try !bag.(n) with
   | _ -> bag :=  [|
     i_piece; o_piece; t_Piece; s_piece; z_piece; j_Piece; l_piece;
   |]
-  |> shuffle |> Array.append !bag; !bag.(n)
+  |> shuffle |> Array.append !bag; get_from_bag n
+
+let reset_bag () = 
+  bag := [||]
 
 let match_name_to_default c =
   match c with
@@ -167,3 +156,21 @@ let match_name_to_default c =
   | 'j' -> j_Piece
   | 'l' -> l_piece
   | _ -> failwith "how"
+
+
+  let offset_data =
+    [|
+      [| (0, 0); (0, 0); (0, 0); (0, 0); (0, 0) |];
+      [| (0, 0); (-1, 0); (-1, -1); (0, 2); (-1, 2) |];
+      [| (0, 0); (0, 0); (0, 0); (0, 0); (0, 0) |];
+      [| (0, 0); (1, 0); (1, -1); (0, 2); (1, 2) |];
+    |]
+  
+  let i_offset_data =
+    [|
+      [| (0, 0); (-1, 0); (2, 0); (-1, 0); (2, 0) |];
+      [| (0, -1); (0, 1); (0, 1); (0, -1); (0, 2) |];
+      [| (-1, -1); (1, 1); (-2, 1); (1, 0); (-2, 0) |];
+      [| (-1, 0); (0, 0); (0, 0); (0, 1); (0, -2) |];
+    |]
+  

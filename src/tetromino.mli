@@ -54,6 +54,11 @@ val move_down : tetromino -> tetromino
 
 val get_from_bag : int -> tetromino
 
+val reset_bag : unit -> unit
+
 val match_name_to_default : char -> tetromino
 (** [match_name_to_default c] is one of the above default values based
     on [c] Example: [match_name_to_default 'i'] is [i_piece]*)
+
+val offset_data : (int * int) array array
+val i_offset_data : (int * int) array array
