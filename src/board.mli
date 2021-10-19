@@ -15,7 +15,7 @@ type board = char array array
     board means there is a no block at the cell at the position. A value
     of ['i'], ['o'], ..., or ['l'] in the board means there is a block
     filling a cell at the position, corresponding to [t.state] for a
-    tetromino t.*)
+    tetromino [t].*)
 
 (* [tile_size] is the side length of each cell of the board in pixels *)
 val tile_size : int
@@ -38,14 +38,15 @@ val draw_tetromino :
   int * int ->
   unit
 (** [draw_tetromino t p] draws [t] to the board with lower left position
-    at [p]. white_out correponds to drawing over the piece with white.
-    preview correponds to drawing the piece as a preview (gray)*)
+    at [p]. [white_out] correponds to drawing over the piece with white.
+    [preview] correponds to drawing the piece as a preview (gray)*)
 
 val clear_board : board -> unit
 (** [clear_board b] clears [b] by setting all elements to [' '] *)
 
 val cleared_rows : board -> int
-(** [cleared_rows b] is the number of complete lines in [b] *)
+(** [cleared_rows b] is the number of complete lines in [b]. A complete
+    line in [b] is a row such that no elements are [' '] *)
 
 val clear_lines : board -> bool
 (** [clear_lines b] checks if any rows of [b] are filled. If no rows are

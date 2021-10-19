@@ -3,18 +3,17 @@ open Board
 open Tetromino
 open Player
 
-(* TODO: think about adding bag to game type *)
-
 type timers = {
   mutable update : float;
   mutable drop_timer : float;
   mutable bot_timer : float;
 }
 
+(* TODO: add bag to game type, as it is esentially a global atm *)
+
 type game = {
   mutable over : bool;
-  mutable player1 : player;
-  mutable player2 : player option;
+  mutable players : player list;
   mutable gravity : float;
   difficulty : float;
   mutable timers : timers;
@@ -30,12 +29,7 @@ let rec display_leaderboard () =
 
 and reset game =
   reset_bag ();
-  game.player1 <- default_player ();
-  match game.player2 with
-  | None -> ()
-  | Some p ->
-      if p.bot then game.player2 <- Some (default_bot ())
-      else game.player2 <- Some (default_player_2 ())
+  game.players <- List.map reset_player game.players
 
 (* p is the loser *)
 and game_over game p =
@@ -54,7 +48,7 @@ and process_game_over_requests game =
      match event2.key with 'q' -> exit 0 | 'r' -> run game | _ -> ());
   process_game_over_requests game
 
-and process_players game p_list bot =
+and process_players game p_list bot_list =
   if not game.over then (
     game.timers.drop_timer <-
       game.timers.drop_timer +. Sys.time () -. game.timers.update;
@@ -66,46 +60,37 @@ and process_players game p_list bot =
 
     (if game.timers.drop_timer > game.gravity then
      try
-       List.iter move_piece_down
-         ((match bot with None -> [] | Some p -> [ p ]) @ p_list);
+       List.iter move_piece_down (bot_list @ p_list);
        game.timers.drop_timer <- 0.
      with CantPlace p -> game_over game p);
 
     begin
       try
         process_human_players p_list;
-        match bot with
-        | None -> ()
-        | Some p ->
+        match bot_list with
+        | [] -> ()
+        | p ->
             if game.timers.bot_timer > game.difficulty then (
-              process_bot_player p;
+              List.iter process_bot_player p;
               game.timers.bot_timer <- 0.)
       with CantPlace p -> game_over game p
     end;
 
-    process_players game p_list bot)
+    process_players game p_list bot_list)
 
 and init_screen game =
-  begin
-    match game.player2 with
-    | None -> open_graph " 650x800"
-    | Some _ -> open_graph " 1350x800"
-  end;
+  open_graph (Printf.sprintf " %dx800" (650 * List.length game.players));
   clear_graph ();
   (* draw_title (); *)
-  draw_outline game.player1.board_pos;
-  spawn_piece game.player1;
-  match game.player2 with
-  | None -> ()
-  | Some p ->
-      draw_outline p.board_pos;
-      spawn_piece p
+  List.iter
+    (fun x ->
+      draw_outline x.board_pos;
+      spawn_piece x)
+    game.players
 
 and run game =
   game.over <- false;
   init_screen game;
-  match game.player2 with
-  | None -> process_players game [ game.player1 ] None
-  | Some p2 ->
-      if p2.bot then process_players game [ game.player1 ] (Some p2)
-      else process_players game [ game.player1; p2 ] None
+  process_players game
+    (List.filter (fun x -> x.bot = false) game.players)
+    (List.filter (fun x -> x.bot = true) game.players)

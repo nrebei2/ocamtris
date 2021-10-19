@@ -1,4 +1,3 @@
-(* controls respresenting the keybinds for movements *)
 type controls = {
   move_left : char;
   move_right : char;
@@ -7,8 +6,9 @@ type controls = {
   drop : char;
   hold : char;
 }
+(** controls respresenting the keybinds for a player in
+    [player.controls] *)
 
-(* mutable state of a player *)
 type player = {
   bot : bool;
   board : Board.board;
@@ -21,27 +21,37 @@ type player = {
   mutable score : int;
   mutable controls : controls;
 }
+(** mutable state of a player [player.bot] is [true] if the player is a
+    bot, otherwise [false]. [player.board] is the players board.
+    [player.bag_pos] is the current position of the player's
+    [next_piece] in the bag. [player.current_piece] is the player's
+    current piece. [player.next_piece] is the player's next piece.
+    [player.held_piece] is the player's held piece. [None] if the player
+    is currently not holding a tetrimino. [player.score] is the player's
+    score. [player.controls] are the player's controls. *)
 
-(** [CantPlace p] is called when [p] cant spawn a piece, i.e., another piece is covering its spawn. Thus is a game over for [p] *)
 exception CantPlace of player
+(** [CantPlace p] is called when [p] cant spawn a piece, i.e., another
+    piece is covering its spawn. Thus is a game over for [p] *)
 
-(** [default_player ()] returns [p] where all fields are initialized as default for a player *)
-val default_player : unit -> player
+val generate_players : int -> int -> player list
+(** [generate_players p_count b_count] returns [p], a list of players
+    with [p_count] humans and [b_count] bots. *)
 
-(** [default_player_2 ()] returns [p] where all fields are initialized as default for a player2 *)
-val default_player_2 : unit -> player
+val reset_player : player -> player
+(** [reset_player p] returns [p'], where [p'] is [p] with its board
+    cleared and pieces reset *)
 
-(** [default_bot ()] returns [p] where all fields are initialized as default for a bot *)
-val default_bot : unit -> player
-
-(** [process_human_players plist] processes each player [plist] and calls functions based on their respective controls *)
 val process_human_players : player list -> unit
+(** [process_human_players plist] processes each player [plist] and
+    calls functions based on their respective controls *)
 
-(** [process_bot_player p] processes [p] *)
 val process_bot_player : player -> unit
+(** [process_bot_player p] processes [p]*)
 
-(* [spawn_piece p] draws [p.current_piece] to [p.board] and game *)
+(* [spawn_piece p] draws [p.current_piece] to [p.board] and the GUI *)
 val spawn_piece : player -> unit
 
-(* [move_piece_down p] clears [p.current_piece] from the board, edits [p.current_piece] to move down 1 cell, and redraws [p.current_piece] *)
+(* [move_piece_down p] clears [p.current_piece] from the board, moves
+   and redraws [p.current_piece] down 1 cell *)
 val move_piece_down : player -> unit

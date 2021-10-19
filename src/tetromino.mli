@@ -8,7 +8,7 @@ type tetromino = {
   state : char array array;
   col : int;
   row : int;
-  rot : int
+  rot : int;
 }
 (** [tetromino] is the tetromino of a tetromino placed on the board
     [name] is the name of the piece [state] is how the piece looks like
@@ -19,8 +19,6 @@ type tetromino = {
     the top left of the board *)
 
 val i_piece : tetromino
-(** default values for each type of pieces, and where they initially
-    spawn on the board ([col], [row] in their record type) *)
 
 val o_piece : tetromino
 
@@ -33,6 +31,8 @@ val z_piece : tetromino
 val j_Piece : tetromino
 
 val l_piece : tetromino
+(** default values for each type of pieces, and where they initially
+    spawn on the board ([col], [row] in their record type) *)
 
 val rotate_left : tetromino -> tetromino
 (** [rotate_right t] is [t'] where [t'] is [t] rotated left *)
@@ -49,16 +49,19 @@ val move_right : tetromino -> tetromino
 val move_down : tetromino -> tetromino
 (** [move_down t] is [t'] where [t'] is [t] moved down one cell*)
 
-(** [get_from_bag i] is the ith element of the bag. The size of bag will recursively increase until i is less than the length of the bag *)
 val get_from_bag : int -> tetromino
+(** [get_from_bag i] is the ith element of the bag. The size of bag will
+    recursively increase until i is less than the length of the bag *)
 
-(** [reset_bag ()] sets the bag as an empty array*)
 val reset_bag : unit -> unit
+(** [reset_bag ()] sets the bag as an empty array*)
 
 val match_name_to_default : char -> tetromino
 (** [match_name_to_default c] is one of the above default values based
     on [c] Example: [match_name_to_default 'i'] is [i_piece]*)
 
-(* used when determining wall kicks, retrieved from https://tetris.wiki/Super_Rotation_System#Wall_Kicks*)
+(* used when determining wall kicks, retrieved from
+   https://tetris.wiki/Super_Rotation_System#Wall_Kicks*)
 val offset_data : (int * int) array array
+
 val i_offset_data : (int * int) array array

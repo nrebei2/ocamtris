@@ -3,6 +3,7 @@
 open Graphics
 open Tetromino
 
+(* TODO: make the two modular for a possible custom game mode*)
 let rows = 20
 
 let columns = 10
@@ -127,8 +128,6 @@ let clear_lines b =
            else Array.copy x :: acc)
          [] b)
   in
-  (* TODO: [cleared_rows b] is the number of cleared rows, use mutable
-     data type (ref) to increase lines cleared/score *)
   if cleared_rows b = 0 then false
   else
     let rec make n =

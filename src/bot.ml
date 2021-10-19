@@ -1,6 +1,7 @@
 open Board
 open Tetromino
 
+(* TODO: wrong i think *)
 let landing_height t b =
   let drop = get_lowest_possible t b in
   let landing_height =
@@ -131,7 +132,7 @@ let rec generate_all_possible_drops t b =
     [] [ t ]
   |> List.fold_left
        (fun acc x ->
-         x :: (positions move_left x b) @ (positions move_right x b) @ acc)
+         (positions move_left x b) @ [x] @ (positions move_right x b) @ acc)
        []
 
 let rec get_best_possible_drop t b next_piece =
