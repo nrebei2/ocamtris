@@ -55,9 +55,9 @@ val clear_lines : board -> bool
     and then returns [true]. *)
 
 val check_valid : Tetromino.tetromino -> board -> bool
-(** [check_valid t b] is [true] if there is no overlap with [b] and [t],
-    and [t] is constrained in the bounds of the board. [false]
-    otherwise. *)
+(** [check_valid t b] is [true] if there is no overlap with the existing
+    tetrominos in [b] and tetromino [t], and [t] is constrained in the
+    bounds of the board. [false] otherwise. *)
 
 val update_board : Tetromino.tetromino -> board -> unit
 (** [update_board t b] edits [b] to contain [t]. *)
