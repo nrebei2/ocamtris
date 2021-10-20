@@ -15,10 +15,6 @@ let tile_size = 30
 let title_font_size = 50
 
 let draw_title () =
-  set_font
-    ("-*-fixed-medium-r-semicondensed--"
-    ^ string_of_int title_font_size
-    ^ "-*-*-*-*-*-iso8859-1");
   moveto
     (300 - (fst (text_size "Ocamtris") / 2))
     (780 - snd (text_size "Ocamtris"));

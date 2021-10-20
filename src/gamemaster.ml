@@ -82,7 +82,7 @@ and process_players game p_list bot_list =
 and init_screen game =
   open_graph (Printf.sprintf " %dx800" (650 * List.length game.players));
   clear_graph ();
-  (* draw_title (); *)
+  draw_title ();
   List.iter
     (fun x ->
       draw_outline x.board_pos;
