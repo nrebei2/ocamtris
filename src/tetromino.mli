@@ -11,8 +11,7 @@ type tetromino = {
   rot : int;
 }
 (** [tetromino] is the tetromino of a tetromino placed on the board
-    [name] is the name of the piece [state] is how the piece looks like
-    idk [col] is the column position relative to the board for the top
+    [name] is the name of the piece. [state] is a 2D respresentation of the tetromino, where [col] is the column position relative to the board for the top
     left of state, 0-indexed [row] is the row position relative to the
     board for the top left of state, 0-indexed. For example, for a
     tetromino with [col = 0] and [row = 0] corresponds to the piece on

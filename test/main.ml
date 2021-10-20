@@ -4,7 +4,7 @@ open Tetromino
 open Board
 open Bot
 
-(** Adopted from A2 [pp_string s] pretty-prints string [s]. *)
+(** Adopted from A2: [pp_string s] pretty-prints string [s]. *)
 let pp_string s = s
 
 (** [pp_board pp_elt board] pretty-prints board [board] using [pp_list]
@@ -30,67 +30,43 @@ let pp_board pp_elt board =
       |> Array.to_list |> List.map Array.to_list
       |> List.map (pp_list pp_elt "; "))
 
+let board_test name board f expected printer =
+  let board = Array.copy board in
+  name >:: fun _ -> assert_equal expected (f board) ~printer
+
+let em_2x2 = Array.make_matrix 2 2 ' '
+
+let em_3x3 = Array.make_matrix 3 3 ' '
+
+let test_piece =
+  {
+    name = 't';
+    state = [| [| 'i'; 'i' |] |];
+    row = 0;
+    col = 0;
+    rot = 0;
+  }
+
 let board_tests =
   [
-    ( "drop piece on board" >:: fun _ ->
-      assert_equal
-        [| [| 'i'; ' ' |]; [| 'i'; 'o' |] |]
-        (let b = [| [| ' '; ' ' |]; [| ' '; ' ' |] |] in
-         drop
-           {
-             name = 't';
-             state = [| [| 'i'; 'o' |] |];
-             row = 0;
-             col = 0;
-             rot = 0;
-           }
-           b;
-         drop
-           {
-             name = 't';
-             state = [| [| 'i'; ' ' |] |];
-             row = 0;
-             col = 0;
-             rot = 0;
-           }
-           b;
-         b)
-        ~printer:(pp_board pp_string) );
-    ( "update piece on board" >:: fun _ ->
-      assert_equal
-        [| [| 'i'; ' ' |]; [| ' '; ' ' |] |]
-        (let b = [| [| ' '; ' ' |]; [| ' '; ' ' |] |] in
-         update_board
-           {
-             name = 't';
-             state = [| [| 'i' |] |];
-             row = 0;
-             col = 0;
-             rot = 0;
-           }
-           b;
-         b)
-        ~printer:(pp_board pp_string) );
-    ( "check_valid with 3x3 board" >:: fun _ ->
-      assert_equal true
-        (let b =
-           [|
-             [| ' '; ' '; ' ' |];
-             [| ' '; ' '; ' ' |];
-             [| 'o'; ' '; 'o' |];
-           |]
-         in
-         let t =
-           {
-             name = 't';
-             state = [| [| 'l'; 'l'; ' ' |] |];
-             col = 0;
-             row = 0;
-             rot = 0;
-           }
-         in
-         check_valid t b)
-        ~printer:string_of_bool );
+    board_test "drop piece on empty 2x2 board" em_2x2
+      (fun b ->
+        drop test_piece b;
+        b)
+      [| [| ' '; ' ' |]; [| 'i'; 'i' |] |]
+      (pp_board pp_string);
+    board_test "update piece on empty 2x2 board" em_2x2
+      (fun b ->
+        update_board test_piece b;
+        b)
+      [| [| 'i'; 'i' |]; [| ' '; ' ' |] |]
+      (pp_board pp_string);
+    board_test "check_valid with 3x3 board"
+      [|
+        [| ' '; ' '; ' ' |]; [| ' '; ' '; ' ' |]; [| 'o'; ' '; 'o' |];
+      |]
+      (fun b -> check_valid test_piece b)
+      true string_of_bool;
     ( "check_valid with column out of bounds" >:: fun _ ->
       assert_equal false
         (let b =

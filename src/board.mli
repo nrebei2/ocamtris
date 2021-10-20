@@ -60,7 +60,7 @@ val check_valid : Tetromino.tetromino -> board -> bool
     otherwise. *)
 
 val update_board : Tetromino.tetromino -> board -> unit
-(** [update_board t b] edits [b] to contain [t]. *)
+(** [update_board t b] edits [b] to contain [t]. Requires [check_valid t b] to be [true]. *)
 
 val get_lowest_possible :
   Tetromino.tetromino -> board -> Tetromino.tetromino

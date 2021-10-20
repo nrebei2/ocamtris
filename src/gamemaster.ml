@@ -50,7 +50,8 @@ and process_game_over_requests game =
 
 and process_players game p_list bot_list =
   if not game.over then (
-    game.timers.drop_timer <-
+    (* Pieces drop *)
+    (* game.timers.drop_timer <-
       game.timers.drop_timer +. Sys.time () -. game.timers.update;
 
     game.timers.bot_timer <-
@@ -62,7 +63,7 @@ and process_players game p_list bot_list =
      try
        List.iter move_piece_down (bot_list @ p_list);
        game.timers.drop_timer <- 0.
-     with CantPlace p -> game_over game p);
+     with CantPlace p -> game_over game p); *)
 
     begin
       try

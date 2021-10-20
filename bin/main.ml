@@ -23,7 +23,7 @@ let init_game m d =
     players =
       (match m with
       | Alone -> generate_players 1 0
-      | PvP -> generate_players 2 0
+      | PvP -> generate_players 4 0
       | PvE -> generate_players 1 5);
     (* TODO change 0.1 to suitable value *)
     gravity = 0.1 /. 1.;
