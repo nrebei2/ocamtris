@@ -71,7 +71,7 @@ let board_tests =
            b;
          b)
         ~printer:(pp_board pp_string) );
-    ( "valid_drop with 3x3 board" >:: fun _ ->
+    ( "check_valid with 3x3 board" >:: fun _ ->
       assert_equal true
         (let b =
            [|
@@ -91,7 +91,7 @@ let board_tests =
          in
          check_valid t b)
         ~printer:string_of_bool );
-    ( "valid_drop with column out of bounds" >:: fun _ ->
+    ( "check_valid with column out of bounds" >:: fun _ ->
       assert_equal false
         (let b =
            [|
@@ -111,7 +111,7 @@ let board_tests =
          in
          check_valid t b)
         ~printer:string_of_bool );
-    ( "valid_drop with row out of bounds" >:: fun _ ->
+    ( "check_valid with row out of bounds" >:: fun _ ->
       assert_equal false
         (let b =
            [|
