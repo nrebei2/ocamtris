@@ -42,7 +42,7 @@ let board_tests =
              state = [| [| 'i'; 'o' |] |];
              row = 0;
              col = 0;
-             rot = 0
+             rot = 0;
            }
            b;
          drop
@@ -51,7 +51,7 @@ let board_tests =
              state = [| [| 'i'; ' ' |] |];
              row = 0;
              col = 0;
-             rot = 0
+             rot = 0;
            }
            b;
          b)
@@ -61,15 +61,139 @@ let board_tests =
         [| [| 'i'; ' ' |]; [| ' '; ' ' |] |]
         (let b = [| [| ' '; ' ' |]; [| ' '; ' ' |] |] in
          update_board
-           { name = 't'; state = [| [| 'i' |] |]; row = 0; col = 0; rot =0 }
+           {
+             name = 't';
+             state = [| [| 'i' |] |];
+             row = 0;
+             col = 0;
+             rot = 0;
+           }
            b;
          b)
         ~printer:(pp_board pp_string) );
-    (* ( "valid drop" >:: fun _ ->
+    ( "valid_drop with 3x3 board" >:: fun _ ->
       assert_equal true
-        (check_valid i_piece player1.board)
-        ~printer:string_of_bool ); *)
-    ( "clear_lines" >:: fun _ ->
+        (let b =
+           [|
+             [| ' '; ' '; ' ' |];
+             [| ' '; ' '; ' ' |];
+             [| 'o'; ' '; 'o' |];
+           |]
+         in
+         let t =
+           {
+             name = 't';
+             state = [| [| 'l'; 'l'; ' ' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+         in
+         check_valid t b)
+        ~printer:string_of_bool );
+    ( "valid_drop with column out of bounds" >:: fun _ ->
+      assert_equal false
+        (let b =
+           [|
+             [| ' '; ' '; ' ' |];
+             [| ' '; ' '; ' ' |];
+             [| 'o'; ' '; 'o' |];
+           |]
+         in
+         let t =
+           {
+             name = 't';
+             state = [| [| 'l'; 'l'; ' ' |] |];
+             col = -1;
+             row = 0;
+             rot = 0;
+           }
+         in
+         check_valid t b)
+        ~printer:string_of_bool );
+    ( "valid_drop with row out of bounds" >:: fun _ ->
+      assert_equal false
+        (let b =
+           [|
+             [| ' '; ' '; ' ' |];
+             [| ' '; ' '; ' ' |];
+             [| 'o'; ' '; 'o' |];
+           |]
+         in
+         let t =
+           {
+             name = 't';
+             state = [| [| 'l'; 'l'; ' ' |] |];
+             col = 0;
+             row = 4;
+             rot = 0;
+           }
+         in
+         check_valid t b)
+        ~printer:string_of_bool );
+    ( "cleared_rows empty board" >:: fun _ ->
+      assert_equal 1
+        (let b = [| [| ' '; ' ' |]; [| ' '; ' ' |] |] in
+         drop
+           {
+             name = 't';
+             state = [| [| 'l'; 'l' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+           b;
+         cleared_rows b)
+        ~printer:string_of_int );
+    ( "cleared_rows bottom row filled" >:: fun _ ->
+      assert_equal 2
+        (let b = [| [| ' '; ' ' |]; [| 'o'; 'o' |] |] in
+         drop
+           {
+             name = 's';
+             state = [| [| 'l'; 'l' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+           b;
+         cleared_rows b)
+        ~printer:string_of_int );
+    ( "cleared_rows only left side filled" >:: fun _ ->
+      assert_equal 0
+        (let b = [| [| ' '; ' ' |]; [| 'o'; ' ' |] |] in
+         drop
+           {
+             name = 's';
+             state = [| [| 'l'; ' ' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+           b;
+         cleared_rows b)
+        ~printer:string_of_int );
+    ( "cleared_rows 3x3" >:: fun _ ->
+      assert_equal 1
+        (let b =
+           [|
+             [| ' '; ' '; ' ' |];
+             [| ' '; ' '; ' ' |];
+             [| 'o'; ' '; 'o' |];
+           |]
+         in
+         drop
+           {
+             name = 's';
+             state = [| [| 'o'; ' ' |] |];
+             col = 1;
+             row = 0;
+             rot = 0;
+           }
+           b;
+         cleared_rows b)
+        ~printer:string_of_int );
+    ( "clear_lines empty board" >:: fun _ ->
       assert_equal true
         (let b = [| [| ' '; ' ' |]; [| ' '; ' ' |] |] in
          drop
@@ -77,7 +201,56 @@ let board_tests =
              name = 't';
              state = [| [| 'l'; 'l' |] |];
              col = 0;
-             row = 0; rot = 0
+             row = 0;
+             rot = 0;
+           }
+           b;
+         clear_lines b)
+        ~printer:string_of_bool );
+    ( "clear_lines bottom row filled" >:: fun _ ->
+      assert_equal true
+        (let b = [| [| ' '; ' ' |]; [| 'o'; 'o' |] |] in
+         drop
+           {
+             name = 's';
+             state = [| [| 'l'; 'l' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+           b;
+         clear_lines b)
+        ~printer:string_of_bool );
+    ( "clear_lines only left side filled" >:: fun _ ->
+      assert_equal false
+        (let b = [| [| ' '; ' ' |]; [| 'o'; ' ' |] |] in
+         drop
+           {
+             name = 's';
+             state = [| [| 'l'; ' ' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+           b;
+         clear_lines b)
+        ~printer:string_of_bool );
+    ( "clear_lines 3x3" >:: fun _ ->
+      assert_equal true
+        (let b =
+           [|
+             [| ' '; ' '; ' ' |];
+             [| ' '; ' '; ' ' |];
+             [| 'o'; ' '; 'o' |];
+           |]
+         in
+         drop
+           {
+             name = 's';
+             state = [| [| 'o'; ' ' |] |];
+             col = 1;
+             row = 0;
+             rot = 0;
            }
            b;
          clear_lines b)
@@ -96,7 +269,8 @@ let bot_tests =
              name = 't';
              state = [| [| 'l'; 'l' |] |];
              col = 0;
-             row = 0; rot = 0
+             row = 0;
+             rot = 0;
            }
            b)
         ~printer:string_of_float );
@@ -108,7 +282,8 @@ let bot_tests =
              name = 't';
              state = [| [| 'l'; 'l' |]; [| 'l'; ' ' |] |];
              col = 0;
-             row = 0; rot = 0
+             row = 0;
+             rot = 0;
            }
            b)
         ~printer:string_of_float );
