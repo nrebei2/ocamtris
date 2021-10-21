@@ -85,6 +85,7 @@ and init_screen game =
   draw_title ();
   draw_next_piece ();
   draw_instructions ();
+  draw_score (List.nth game.players 0); 
   List.iter
     (fun x ->
       draw_outline x.board_pos;

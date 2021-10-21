@@ -79,7 +79,13 @@ let reset_player p =
     held_piece = None;
     can_hold = true;
   }
-
+  let draw_score (p : player) =
+    set_font
+      ("-*-fixed-medium-r-semicondensed--"
+      ^ string_of_int 35
+      ^ "-*-*-*-*-*-iso8859-1");
+    moveto ((fst p.board_pos) + 300) ((snd p.board_pos) + 600);
+    draw_string ("Score:" ^ string_of_int(p.score))
 let process_wall_kicks f p =
   let cur = f p.current_piece in
   match cur.name with

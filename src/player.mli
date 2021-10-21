@@ -55,3 +55,6 @@ val spawn_piece : player -> unit
 (* [move_piece_down p] clears [p.current_piece] from the board, moves
    and redraws [p.current_piece] down 1 cell *)
 val move_piece_down : player -> unit
+
+(* Keeps and updates the player's tetris score on the screen *)
+val draw_score : player -> unit

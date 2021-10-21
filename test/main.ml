@@ -231,6 +231,84 @@ let board_tests =
            b;
          clear_lines b)
         ~printer:string_of_bool );
+        ( "lowest_possible middle row" >:: fun _ ->
+          assert_equal
+            {
+              name = 't';
+              state = [| [| 'l'; 'l'; ' ' |] |];
+              col = 0;
+              row = 1;
+              rot = 0;
+            }
+            (let b =
+               [|
+                 [| ' '; ' '; ' ' |];
+                 [| ' '; ' '; ' ' |];
+                 [| 'o'; ' '; 'o' |];
+               |]
+             in
+             let t =
+               {
+                 name = 't';
+                 state = [| [| 'l'; 'l'; ' ' |] |];
+                 col = 0;
+                 row = 0;
+                 rot = 0;
+               }
+             in
+             get_lowest_possible t b) );
+             ( "lowest_possible low row" >:: fun _ ->
+              assert_equal
+                {
+                  name = 't';
+                  state = [| [| 'l'; 'l'; ' ' |] |];
+                  col = 0;
+                  row = 2;
+                  rot = 0;
+                }
+                (let b =
+                   [|
+                     [| ' '; ' '; ' ' |];
+                     [| ' '; ' '; ' ' |];
+                     [| ' '; ' '; ' ' |];
+                   |]
+                 in
+                 let t =
+                   {
+                     name = 't';
+                     state = [| [| 'l'; 'l'; ' ' |] |];
+                     col = 0;
+                     row = 0;
+                     rot = 0;
+                   }
+                 in
+                 get_lowest_possible t b) );
+                 ( "lowest_possible high row" >:: fun _ ->
+                  assert_equal
+                    {
+                      name = 't';
+                      state = [| [| 'l'; 'l'; ' ' |] |];
+                      col = 0;
+                      row = 0;
+                      rot = 0;
+                    }
+                    (let b =
+                       [|
+                         [| ' '; ' '; ' ' |];
+                         [| 'o'; ' '; 'o' |];
+                         [| 'o'; ' '; 'o' |];
+                       |]
+                     in
+                     let t =
+                       {
+                         name = 't';
+                         state = [| [| 'l'; 'l'; ' ' |] |];
+                         col = 0;
+                         row = 0;
+                         rot = 0;
+                       }
+                     in
+                     get_lowest_possible t b) );
   ]
 
 let tetromino_tests = []
