@@ -23,7 +23,11 @@ In order for ocamtris to display the screen, a X11 display server is needed. For
 
 ## Mac
 
-...
+1. To run ocamtris, the [Graphics](https://ocaml.org/releases/4.02/htmlman/libref/Graphics.html) module must be installed
+2. In terminal, run the command `opam install graphics`
+3. In order for ocamtris to display the screen, a XQuartz is also needed, which you can install from [https://www.xquartz.org/]
+4. To run the command below (`make play`), you may need to have XQuartz running in the background, or run the command from the XQuartz terminal, which you can open by opening XQuartz and selecting Applications > Terminal from the menu bar.
+
 
 
 ## Run Ocamtris
