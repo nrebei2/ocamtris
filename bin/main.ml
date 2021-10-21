@@ -28,7 +28,10 @@ let init_game m d =
     (* TODO change 0.1 to suitable value *)
     gravity = 0.1 /. 1.;
     difficulty =
-      (match d with Easy -> 0.5 | Fair -> 0.2 | Hard -> 0.000000000075);
+      (match d with
+      | Easy -> 0.5
+      | Fair -> 0.2
+      | Hard -> 0.000000000075);
     timers = default_timer ();
   }
 

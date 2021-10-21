@@ -136,19 +136,21 @@ and clear_piece t p =
    coding the col and row and try something else *)
 
 and clear_draw_next_piece p =
+  
   draw_tetromino ~white_out:true
-    { p.current_piece with col = 12; row = 2 }
+    (let col, row = (if p.current_piece.name = 'i' then 10, 1 else 12, 2) in { p.current_piece with col = col; row = row })
     p.board_pos;
-  draw_tetromino { p.next_piece with col = 12; row = 2 } p.board_pos
+  draw_tetromino 
+  (let col, row = (if p.next_piece.name = 'i' then 10, 1 else 12, 2) in { p.next_piece with col = col; row = row }) p.board_pos
 
 and clear_draw_held_piece tmp p =
   match p.held_piece with
   | None -> ()
   | Some x ->
       draw_tetromino ~white_out:true
-        { p.current_piece with col = -5; row = 2 }
+      (let col, row = (if p.current_piece.name = 'i' then -6, 2 else -4, 2) in { p.current_piece with col = col; row = row })
         p.board_pos;
-      draw_tetromino { x with col = -5; row = 2 } p.board_pos;
+      draw_tetromino (let col, row = (if x.name = 'i' then -6, 2 else -4, 2) in { x with col = col; row = row }) p.board_pos;
       clear_piece tmp p
 
 and draw_preview p =

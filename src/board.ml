@@ -4,7 +4,7 @@ open Graphics
 open Tetromino
 
 (* TODO: make the two modular for a possible custom game mode*)
-let rows = 20
+let rows = 22
 
 let columns = 10
 
@@ -19,6 +19,34 @@ let draw_title () =
     (300 - (fst (text_size "Ocamtris") / 2))
     (780 - snd (text_size "Ocamtris"));
   draw_string "Ocamtris"
+
+let draw_next_piece () =
+  moveto
+    (550 - (fst (text_size "Ocamtris") / 2))
+    (550 - snd (text_size "Ocamtris"));
+  draw_string "Next Piece"
+
+let draw_instructions () =
+  moveto
+    (500 - (fst (text_size "Ocamtris") / 2))
+    (350 - snd (text_size "Ocamtris"));
+  draw_string "Controls:";
+  moveto
+    (500 - (fst (text_size "Ocamtris") / 2))
+    (325 - snd (text_size "Ocamtris"));
+  draw_string "- Use \"A\" and \"D\" keys";
+  moveto
+    (500 - (fst (text_size "Ocamtris") / 2))
+    (310 - snd (text_size "Ocamtris"));
+  draw_string " to move left and right";
+  moveto
+    (500 - (fst (text_size "Ocamtris") / 2))
+    (285 - snd (text_size "Ocamtris"));
+  draw_string "- \"M\" to rotate left";
+  moveto
+    (500 - (fst (text_size "Ocamtris") / 2))
+    (260 - snd (text_size "Ocamtris"));
+  draw_string "- \"N\" to drop isntantly"
 
 let draw_outline board_pos =
   set_color black;

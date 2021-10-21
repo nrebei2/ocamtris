@@ -31,6 +31,12 @@ val draw_board : board -> int * int -> unit
 (* [draw_title ()] draws the Ocamtris title at the top of the screen. *)
 val draw_title : unit -> unit
 
+(* [draw_next_piece ()] draws the label for the next tetromino peice. *)
+val draw_next_piece : unit -> unit
+
+(* [draw_instructions ()] draws the instructions for the game.*)
+val draw_instructions : unit -> unit
+
 val draw_tetromino :
   ?white_out:bool ->
   ?preview:bool ->
@@ -60,7 +66,8 @@ val check_valid : Tetromino.tetromino -> board -> bool
     bounds of the board. [false] otherwise. *)
 
 val update_board : Tetromino.tetromino -> board -> unit
-(** [update_board t b] edits [b] to contain [t]. Requires [check_valid t b] to be [true]. *)
+(** [update_board t b] edits [b] to contain [t]. Requires
+    [check_valid t b] to be [true]. *)
 
 val get_lowest_possible :
   Tetromino.tetromino -> board -> Tetromino.tetromino

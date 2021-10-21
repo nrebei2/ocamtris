@@ -83,6 +83,8 @@ and init_screen game =
   open_graph (Printf.sprintf " %dx800" (650 * List.length game.players));
   clear_graph ();
   draw_title ();
+  draw_next_piece ();
+  draw_instructions ();
   List.iter
     (fun x ->
       draw_outline x.board_pos;
