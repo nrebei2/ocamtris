@@ -14,3 +14,6 @@ play:
 
 clean:
 	dune clean
+
+zip:
+	zip -r ocamtris.zip . -x _build/\* .git/\*
