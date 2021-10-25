@@ -2,7 +2,7 @@
 
     @author Noah Solomon (njs99)
     @author Noah Rebei (nr285)
-    @author Richard Kang (rk695)
+    @author Richard Kang test (rk695)
     @author Jacobo Carreon (jic56) *)
 
 val hours_worked : int list
