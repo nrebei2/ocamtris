@@ -24,7 +24,7 @@ let default_timer () = { update = 0.; drop_timer = 0.; bot_timer = 0. }
 (* TODO: Respresent leaderboard as json and use Yojson to read/write
    data *)
 let rec display_leaderboard () =
-  moveto 100 100;
+  moveto 100 700;
   draw_string "leaderboard here"
 
 and reset game =
@@ -38,7 +38,7 @@ and game_over game p =
   reset game;
 
   display_leaderboard ();
-  moveto 350 100;
+  moveto 350 700;
   draw_string "press r to retry, press q to quit";
   process_game_over_requests game
 
@@ -51,20 +51,17 @@ and process_game_over_requests game =
 and process_players game p_list bot_list =
   if not game.over then (
     (* Pieces drop *)
-    (* game.timers.drop_timer <-
-      game.timers.drop_timer +. Sys.time () -. game.timers.update;
+    (* game.timers.drop_timer <- game.timers.drop_timer +. Sys.time ()
+       -. game.timers.update;
 
-    game.timers.bot_timer <-
-      game.timers.bot_timer +. Sys.time () -. game.timers.update;
+       game.timers.bot_timer <- game.timers.bot_timer +. Sys.time () -.
+       game.timers.update;
 
-    game.timers.update <- Sys.time ();
+       game.timers.update <- Sys.time ();
 
-    (if game.timers.drop_timer > game.gravity then
-     try
-       List.iter move_piece_down (bot_list @ p_list);
-       game.timers.drop_timer <- 0.
-     with CantPlace p -> game_over game p); *)
-
+       (if game.timers.drop_timer > game.gravity then try List.iter
+       move_piece_down (bot_list @ p_list); game.timers.drop_timer <- 0.
+       with CantPlace p -> game_over game p); *)
     begin
       try
         process_human_players p_list;

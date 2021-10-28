@@ -46,6 +46,7 @@ type player = {
   mutable can_hold : bool;
   mutable score : int;
   mutable controls : controls;
+  mutable cleared_4_rows : bool;
 }
 
 exception CantPlace of player
@@ -62,6 +63,7 @@ let player i =
     can_hold = true;
     score = 0;
     controls = List.hd controls;
+    cleared_4_rows = false;
   }
 
 let bot i = { (player i) with bot = true }
@@ -79,9 +81,16 @@ let reset_player p =
     held_piece = None;
     can_hold = true;
   }
-  let draw_score (p : player) =
-    moveto ((fst p.board_pos) + 320) ((snd p.board_pos) + 650);
-    draw_string ("Score:" ^ string_of_int(p.score))
+
+let draw_score (p : player) =
+  let score_text = "Score: " ^ string_of_int p.score in
+  let width, height = text_size score_text in
+  set_color white;
+  fill_rect (fst p.board_pos + 320) (snd p.board_pos + 650) width height;
+  set_color black;
+  moveto (fst p.board_pos + 320) (snd p.board_pos + 650);
+  draw_string score_text
+
 let process_wall_kicks f p =
   let cur = f p.current_piece in
   match cur.name with
@@ -138,21 +147,33 @@ and clear_piece t p =
    coding the col and row and try something else *)
 
 and clear_draw_next_piece p =
-  
   draw_tetromino ~white_out:true
-    (let col, row = (if p.current_piece.name = 'i' then 10, 1 else 12, 2) in { p.current_piece with col = col; row = row })
+    (let col, row =
+       if p.current_piece.name = 'i' then (10, 1) else (12, 2)
+     in
+     { p.current_piece with col; row })
     p.board_pos;
-  draw_tetromino 
-  (let col, row = (if p.next_piece.name = 'i' then 10, 1 else 12, 2) in { p.next_piece with col = col; row = row }) p.board_pos
+  draw_tetromino
+    (let col, row =
+       if p.next_piece.name = 'i' then (10, 1) else (12, 2)
+     in
+     { p.next_piece with col; row })
+    p.board_pos
 
 and clear_draw_held_piece tmp p =
   match p.held_piece with
   | None -> ()
   | Some x ->
       draw_tetromino ~white_out:true
-      (let col, row = (if p.current_piece.name = 'i' then -6, 2 else -4, 2) in { p.current_piece with col = col; row = row })
+        (let col, row =
+           if p.current_piece.name = 'i' then (-6, 2) else (-4, 2)
+         in
+         { p.current_piece with col; row })
         p.board_pos;
-      draw_tetromino (let col, row = (if x.name = 'i' then -6, 2 else -4, 2) in { x with col = col; row = row }) p.board_pos;
+      draw_tetromino
+        (let col, row = if x.name = 'i' then (-6, 2) else (-4, 2) in
+         { x with col; row })
+        p.board_pos;
       clear_piece tmp p
 
 and draw_preview p =
@@ -192,10 +213,17 @@ and complete_move should_drop p =
     p.board_pos;
   if should_drop then (
     drop p.current_piece p.board;
-    (* TODO: call [cleared_rows p.board] match the number of cleared
-       rows with score increase p.score p.score <- p.score +
-       score_you_want_to_increase_it_with call a function which print
-       the players score on the GUI *)
+    let num_rows_cleared = cleared_rows p.board in
+    (match num_rows_cleared with
+    | 1 -> p.score <- p.score + 100
+    | 2 -> p.score <- p.score + 300
+    | 3 -> p.score <- p.score + 500
+    | 4 when p.cleared_4_rows -> p.score <- p.score + 1200
+    | 4 when not p.cleared_4_rows -> p.score <- p.score + 800
+    | _ -> ());
+    if num_rows_cleared < 4 then p.cleared_4_rows <- false
+    else p.cleared_4_rows <- true;
+    draw_score p;
     if clear_lines p.board then draw_board p.board p.board_pos;
     p.can_hold <- true)
   else clear_draw_held_piece p.current_piece p;

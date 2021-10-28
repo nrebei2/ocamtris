@@ -20,6 +20,7 @@ type player = {
   mutable can_hold : bool;
   mutable score : int;
   mutable controls : controls;
+  mutable cleared_4_rows : bool;
 }
 (** mutable state of a player [player.bot] is [true] if the player is a
     bot, otherwise [false]. [player.board] is the players board.
@@ -28,7 +29,9 @@ type player = {
     current piece. [player.next_piece] is the player's next piece.
     [player.held_piece] is the player's held piece. [None] if the player
     is currently not holding a tetrimino. [player.score] is the player's
-    score. [player.controls] are the player's controls. *)
+    score. [player.controls] are the player's controls.
+    [player.cleared_4_rows] keeps track of whether or not the player
+    just cleared 4 rows, known as a Tetris, for score boosting purpsoes. *)
 
 exception CantPlace of player
 (** [CantPlace p] is called when [p] cant spawn a piece, i.e., another
