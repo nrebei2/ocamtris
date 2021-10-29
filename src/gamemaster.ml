@@ -24,30 +24,33 @@ let default_timer () = { update = 0.; drop_timer = 0.; bot_timer = 0. }
 
 (* TODO: Respresent leaderboard as json and use Yojson to read/write
    data *)
-let rec display_leaderboard p =
-  moveto 100 700;
-  draw_string "leaderboard:";
-  let dir_separator = Filename.dir_sep in
-  let leaderboard_file =
-    "assets" ^ dir_separator ^ "leaderboard.json"
-  in
-  let scores =
-    leaderboard_file |> from_json_file
-    |> add_score ("temp name", p.score)
-  in
-  let _ = save_leaderboard_file scores leaderboard_file in
-  let _, text_height = text_size "leaderboard:" in
-  let rec draw_scores vertical_pos scores_lst =
-    match scores_lst with
-    | [] -> ()
-    | h :: t ->
-        moveto 100 vertical_pos;
-        let player_name, player_score = h in
-        draw_string (player_name ^ ": " ^ string_of_int player_score);
-        draw_scores (vertical_pos - text_height) t
-  in
+let rec display_leaderboard players =
+  match players with
+  | [] -> ()
+  | p1 :: _ ->
+      moveto 100 700;
+      draw_string "leaderboard:";
+      let dir_separator = Filename.dir_sep in
+      let leaderboard_file =
+        "assets" ^ dir_separator ^ "leaderboard.json"
+      in
+      let scores =
+        leaderboard_file |> from_json_file
+        |> add_score ("temp name", p1.score)
+      in
+      let _ = save_leaderboard_file scores leaderboard_file in
+      let _, text_height = text_size "leaderboard:" in
+      let rec draw_scores vertical_pos scores_lst =
+        match scores_lst with
+        | [] -> ()
+        | h :: t ->
+            moveto 100 vertical_pos;
+            let player_name, player_score = h in
+            draw_string (player_name ^ ": " ^ string_of_int player_score);
+            draw_scores (vertical_pos - text_height) t
+      in
 
-  scores |> draw_scores (700 - text_height)
+      scores |> draw_scores (700 - text_height)
 
 and reset game =
   reset_bag ();
@@ -59,7 +62,7 @@ and game_over game p =
   clear_graph ();
   reset game;
 
-  display_leaderboard p;
+  display_leaderboard game.players;
   moveto 350 700;
   draw_string "press r to retry, press q to quit";
   process_game_over_requests game
@@ -73,17 +76,19 @@ and process_game_over_requests game =
 and process_players game p_list bot_list =
   if not game.over then (
     (* Pieces drop *)
-    (* game.timers.drop_timer <- game.timers.drop_timer +. Sys.time ()
-       -. game.timers.update;
+    game.timers.drop_timer <-
+      game.timers.drop_timer +. Sys.time () -. game.timers.update;
 
-       game.timers.bot_timer <- game.timers.bot_timer +. Sys.time () -.
-       game.timers.update;
+    game.timers.bot_timer <-
+      game.timers.bot_timer +. Sys.time () -. game.timers.update;
 
-       game.timers.update <- Sys.time ();
+    game.timers.update <- Sys.time ();
 
-       (if game.timers.drop_timer > game.gravity then try List.iter
-       move_piece_down (bot_list @ p_list); game.timers.drop_timer <- 0.
-       with CantPlace p -> game_over game p); *)
+    (if game.timers.drop_timer > game.gravity then
+     try
+       List.iter move_piece_down (bot_list @ p_list);
+       game.timers.drop_timer <- 0.
+     with CantPlace p -> game_over game p);
     begin
       try
         process_human_players p_list;

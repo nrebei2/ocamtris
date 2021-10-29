@@ -37,16 +37,19 @@ let save_leaderboard_file
     (filename : string) =
   Yojson.to_file filename (to_json scores)
 
-let should_add_score (new_score : score) (scores : leaderboard_scores) :
-    bool =
-  if snd new_score < (scores |> List.rev |> List.hd |> snd) then false
-  else true
+(* let should_add_score (new_score : score) (scores :
+   leaderboard_scores) : bool = if snd new_score < (scores |> List.rev
+   |> List.hd |> snd) then false else true *)
+
+(* let rec player_exists (new_score : score) (scores :
+   leaderboard_scores) : bool = match scores with | [] -> false | (name,
+   _) :: t -> if name = fst new_score then true else player_exists
+   new_score t *)
 
 let compare_scores x y = snd x - snd y
 
-let add_score
-    (new_score : string * int)
-    (leaderboard : (string * int) list) =
-  [ new_score ] @ leaderboard
+let add_score (new_score : string * int) (scores : (string * int) list)
+    =
+  [ new_score ] @ scores
   |> List.sort compare_scores
   |> List.tl |> List.rev

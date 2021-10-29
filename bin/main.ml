@@ -23,8 +23,8 @@ let init_game m d =
     players =
       (match m with
       | Alone -> generate_players 1 0
-      | PvP -> generate_players 4 0
-      | PvE -> generate_players 1 5);
+      | PvP -> generate_players 1 1
+      | PvE -> generate_players 1 1);
     (* TODO change 0.1 to suitable value *)
     gravity = 0.1 /. 1.;
     difficulty =
@@ -38,5 +38,5 @@ let init_game m d =
 (* Execute the game *)
 let () =
   Random.self_init ();
-  let game = init_game Alone Hard in
+  let game = init_game PvE Hard in
   run game

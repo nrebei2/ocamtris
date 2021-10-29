@@ -18,8 +18,5 @@ val from_json_file : string -> leaderboard_scores
 val save_leaderboard_file : leaderboard_scores -> string -> unit
 (** [save_leaderboard_file s f] exports scores [s] to file [f]. *)
 
-val should_add_score : score -> leaderboard_scores -> bool
-(** Whether or not the score is in the top *)
-
 val add_score : score -> leaderboard_scores -> leaderboard_scores
 (** Add a new score to the leaderboard *)
