@@ -1,75 +1,17 @@
-(* Board implementation*)
-
 open Graphics
 open Tetromino
-
-(* TODO: make the two modular for a possible custom game mode*)
-let rows = 22
-
-let columns = 10
+open Theme
+open Settings
 
 type board = char array array
 
-let tile_size = 30
-
-let title_font_size = 50
-
-let draw_title () =
-  moveto
-    (300 - (fst (text_size "Ocamtris") / 2))
-    (780 - snd (text_size "Ocamtris"));
-  draw_string "Ocamtris"
-
-let draw_next_piece () =
-  moveto
-    (550 - (fst (text_size "Ocamtris") / 2))
-    (550 - snd (text_size "Ocamtris"));
-  draw_string "Next Piece"
-
-let draw_instructions () =
-  moveto
-    (500 - (fst (text_size "Ocamtris") / 2))
-    (350 - snd (text_size "Ocamtris"));
-  draw_string "Controls:";
-  moveto
-    (500 - (fst (text_size "Ocamtris") / 2))
-    (325 - snd (text_size "Ocamtris"));
-  draw_string "- Use \"A\" and \"D\" keys";
-  moveto
-    (500 - (fst (text_size "Ocamtris") / 2))
-    (310 - snd (text_size "Ocamtris"));
-  draw_string " to move left and right";
-  moveto
-    (500 - (fst (text_size "Ocamtris") / 2))
-    (285 - snd (text_size "Ocamtris"));
-  draw_string "- \"M\" to rotate left";
-  moveto
-    (500 - (fst (text_size "Ocamtris") / 2))
-    (260 - snd (text_size "Ocamtris"));
-  draw_string "- \"N\" to drop isntantly"
-
-let draw_outline board_pos =
-  set_color black;
-  for i = 0 to columns do
-    moveto (fst board_pos + (tile_size * i)) (snd board_pos);
-    lineto
-      (fst board_pos + (tile_size * i))
-      (snd board_pos + (tile_size * rows))
-  done;
-  for j = 0 to rows do
-    moveto (fst board_pos) (snd board_pos + (tile_size * j));
-    lineto
-      (fst board_pos + (tile_size * columns))
-      (snd board_pos + (tile_size * j))
-  done
-
-(* TODO: change to pasting a picture instead *)
 let color_cell color r c board_pos =
-  set_color color;
+  let tile_size = 30 in
+  set_color color; 
   fill_rect
     ((c * tile_size) + fst board_pos)
-    (((rows - r - 1) * tile_size) + snd board_pos)
-    tile_size tile_size
+    (((fst settings.board_size - r - 1) * tile_size) + snd board_pos)
+    (tile_size - 1) (tile_size - 1)
 
 let draw_2D_aray
     ?draw_white:(b = false)
@@ -86,25 +28,24 @@ let draw_2D_aray
       if b3 then
         match ar.(r).(c) with
         | ' ' -> ()
-        | _ -> color_cell (rgb 200 200 200) r' c' board_pos
+        | _ -> color_cell (!cur_theme Preview) r' c' board_pos
       else if b2 then
         match ar.(r).(c) with
         | ' ' -> ()
-        | _ -> color_cell white r' c' board_pos
+        | _ -> color_cell (!cur_theme Background) r' c' board_pos
       else
         match ar.(r).(c) with
-        | 'i' -> color_cell cyan r' c' board_pos
-        | 'o' -> color_cell yellow r' c' board_pos
-        | 't' -> color_cell magenta r' c' board_pos
-        | 's' -> color_cell green r' c' board_pos
-        | 'z' -> color_cell red r' c' board_pos
-        | 'j' -> color_cell blue r' c' board_pos
-        | 'l' -> color_cell (rgb 255 165 0) r' c' board_pos
-        | ' ' -> if b then color_cell white r' c' board_pos else ()
+        | 'i' -> color_cell (!cur_theme I)  r' c' board_pos
+        | 'o' -> color_cell (!cur_theme O)  r' c' board_pos
+        | 't' -> color_cell (!cur_theme T)  r' c' board_pos
+        | 's' -> color_cell (!cur_theme S)  r' c' board_pos
+        | 'z' -> color_cell (!cur_theme Z)  r' c' board_pos
+        | 'j' -> color_cell (!cur_theme J)  r' c' board_pos
+        | 'l' -> color_cell (!cur_theme L)  r' c' board_pos
+        | ' ' -> if b then color_cell (!cur_theme Background)  r' c' board_pos else ()
         | _ -> failwith "shouldnt happen ¯\\_(ツ)_/¯"
     done
-  done;
-  draw_outline board_pos
+  done
 
 let draw_board b = draw_2D_aray ~draw_white:true b 0 0
 
@@ -160,7 +101,7 @@ let clear_lines b =
       | _ -> Array.make (Array.length b.(0)) ' ' :: make (n - 1)
     in
     let new_board =
-      make (rows - List.length uncleared_rows) @ uncleared_rows
+      make (fst settings.board_size - List.length uncleared_rows) @ uncleared_rows
     in
     new_board |> copy_to_2D_array b;
     true

@@ -22,9 +22,11 @@ type game = {
   mutable timers : timers;
 }
 
+val cur_game : game option ref
+
 (* [default_timer ()] returns [timer] where all fields are initialized
    as [0.] *)
 val default_timer : unit -> timers
 
 (* [run game] starts the game given [game]'s specifications *)
-val run : game -> unit
+val play_game : unit -> unit

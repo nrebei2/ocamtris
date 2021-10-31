@@ -1,10 +1,14 @@
-open Graphics
+open Settings
 open Gamemaster
-open Player
+open Leaderboard
 
 type scene =
   | Menu
-  | Play
+  | Settings
+  | Leaderboard
+  | Game
+
+let cur_scene = ref Game
 
 (*Draws the button options on menu screen*)
 let draw_buttons () = ()
@@ -20,8 +24,12 @@ let open_menu () = ()
 (* open_graph (Printf.sprintf " %dx800" (650 * List.length
    game.players)) *)
 
-(*[open_scene] opens the main menu if the current scene is Menu. If the
-  current scene is Play, it starts the game at default settings.*)
-let open_scene scene =
-  match scene with Menu -> open_menu () | Play -> ()
+
+let open_scene () =
+  match !cur_scene with
+  | Menu -> open_menu ()
+  | Settings -> open_settings ()
+  | Game -> play_game ()
+  | Leaderboard -> display_leaderboard 700
+  (* | Settings -> open_settings () *)
 (* Random.self_init (); let game = init_game PvE Hard in run game *)

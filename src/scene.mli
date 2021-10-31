@@ -6,8 +6,15 @@
 
 (* [scene] is the state of the user that represents whether the user is
    in the menu screen *)
-type scene
+type scene =
+  | Menu
+  | Settings
+  | Leaderboard
+  | Game
+
+
+val cur_scene : scene ref
 
 (* [open_scene] opens the menu if the scene is of type Menu, and runs
    the game if scene is of type Game.*)
-val open_scene : scene -> unit
+val open_scene : unit -> unit

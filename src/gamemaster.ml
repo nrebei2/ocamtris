@@ -1,8 +1,9 @@
 open Graphics
-open Board
 open Tetromino
 open Player
 open Leaderboard
+open Drawing
+open Settings
 
 type timers = {
   mutable update : float;
@@ -22,14 +23,32 @@ type game = {
 
 let default_timer () = { update = 0.; drop_timer = 0.; bot_timer = 0. }
 
-(* TODO: Respresent leaderboard as json and use Yojson to read/write
-   data *)
-let rec display_leaderboard players =
+(* initialize game given current mode and difficulty*)
+let init_game () =
+  {
+    over = false;
+    players =
+      (match Settings.settings.mode with
+      | Alone -> generate_players 1 0
+      | PvP -> generate_players 1 1
+      | PvE -> generate_players 1 1);
+    (* TODO change 0.1 to suitable value *)
+    gravity = 0.1 /. 1.;
+    difficulty =
+      (match Settings.settings.diff with
+      | Easy -> 0.5
+      | Fair -> 0.2
+      | Hard -> 0.000000000075);
+    timers = default_timer ();
+  }
+
+let cur_game = ref None
+
+let save_to_leaderboard players =
   match players with
   | [] -> ()
   | p1 :: _ ->
-      moveto 100 700;
-      draw_string "leaderboard:";
+      
       let dir_separator = Filename.dir_sep in
       let leaderboard_file =
         "assets" ^ dir_separator ^ "leaderboard.json"
@@ -39,20 +58,10 @@ let rec display_leaderboard players =
         |> add_score ("temp name", p1.score)
       in
       let _ = save_leaderboard_file scores leaderboard_file in
-      let _, text_height = text_size "leaderboard:" in
-      let rec draw_scores vertical_pos scores_lst =
-        match scores_lst with
-        | [] -> ()
-        | h :: t ->
-            moveto 100 vertical_pos;
-            let player_name, player_score = h in
-            draw_string (player_name ^ ": " ^ string_of_int player_score);
-            draw_scores (vertical_pos - text_height) t
-      in
 
-      scores |> draw_scores (700 - text_height)
+      display_leaderboard 700
 
-and reset game =
+let rec reset game =
   reset_bag ();
   game.players <- List.map reset_player game.players
 
@@ -62,7 +71,7 @@ and game_over game p =
   clear_graph ();
   reset game;
 
-  display_leaderboard game.players;
+  save_to_leaderboard game.players;
   moveto 350 700;
   draw_string "press r to retry, press q to quit";
   process_game_over_requests game
@@ -70,7 +79,10 @@ and game_over game p =
 and process_game_over_requests game =
   (let event2 = wait_next_event [ Key_pressed ] in
    if game.over then
-     match event2.key with 'q' -> exit 0 | 'r' -> run game | _ -> ());
+     match event2.key with
+     | 'q' -> exit 0
+     | 'r' -> play_game ()
+     | _ -> ());
   process_game_over_requests game
 
 and process_players game p_list bot_list =
@@ -116,7 +128,9 @@ and init_screen game =
       spawn_piece x)
     game.players
 
-and run game =
+and play_game () =
+  let game = init_game () in
+  cur_game := Some game;
   game.over <- false;
   init_screen game;
   process_players game

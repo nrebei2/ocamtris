@@ -1,4 +1,5 @@
 open Yojson.Basic.Util
+open Graphics
 
 type score = string * int
 
@@ -53,3 +54,16 @@ let add_score (new_score : string * int) (scores : (string * int) list)
   [ new_score ] @ scores
   |> List.sort compare_scores
   |> List.tl |> List.rev
+
+let display_leaderboard vertical_pos =
+  moveto 100 700;
+  draw_string "leaderboard:";
+  let rec draw_scores vertical_pos scores_lst = 
+  match scores_lst with
+  | [] -> ()
+  | h :: t ->
+      moveto 100 vertical_pos;
+      let player_name, player_score = h in
+      draw_string (player_name ^ ": " ^ string_of_int player_score);
+      draw_scores vertical_pos t 
+  in draw_scores vertical_pos (("assets" ^ Filename.dir_sep ^ "leaderboard.json") |> from_json_file)

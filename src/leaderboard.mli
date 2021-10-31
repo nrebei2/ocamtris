@@ -20,3 +20,5 @@ val save_leaderboard_file : leaderboard_scores -> string -> unit
 
 val add_score : score -> leaderboard_scores -> leaderboard_scores
 (** Add a new score to the leaderboard *)
+
+val display_leaderboard : int -> unit

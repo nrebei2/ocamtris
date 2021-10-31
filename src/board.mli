@@ -3,10 +3,6 @@
     This module represents the data stored and operations in the main
     play area, the board. *)
 
-val rows : int
-
-val columns : int
-
 type board = char array array
 (** [board] is a state of a board in time, represented as a 2D array of
     chars of size [rows]x[columns] The structure of board is the same as
@@ -17,25 +13,10 @@ type board = char array array
     filling a cell at the position, corresponding to [t.state] for a
     tetromino [t].*)
 
-(* [tile_size] is the side length of each cell of the board in pixels *)
-val tile_size : int
-
-(* [draw_outline p] draws the grid outline of the board to the GUI
-   window, with its lower left position at [p]*)
-val draw_outline : int * int -> unit
-
 (* [draw_board b p] draws the entire board [b] to the GUI window, with
    its lower left position at [p] *)
 val draw_board : board -> int * int -> unit
 
-(* [draw_title ()] draws the Ocamtris title at the top of the screen. *)
-val draw_title : unit -> unit
-
-(* [draw_next_piece ()] draws the label for the next tetromino peice. *)
-val draw_next_piece : unit -> unit
-
-(* [draw_instructions ()] draws the instructions for the game.*)
-val draw_instructions : unit -> unit
 
 val draw_tetromino :
   ?white_out:bool ->

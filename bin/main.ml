@@ -1,42 +1,15 @@
+open Graphics 
 open Game
-open Gamemaster
-open Player
+open Settings
+open Scene
 
-type scene =
-  | Menu
-  | Play
-
-type mode =
-  | Alone
-  | PvP
-  | PvE
-
-type difficulty =
-  | Easy
-  | Fair
-  | Hard
-
-(* initialize game given a mode and difficulty*)
-let init_game m d =
-  {
-    over = false;
-    players =
-      (match m with
-      | Alone -> generate_players 1 0
-      | PvP -> generate_players 1 1
-      | PvE -> generate_players 1 1);
-    (* TODO change 0.1 to suitable value *)
-    gravity = 0.1 /. 1.;
-    difficulty =
-      (match d with
-      | Easy -> 0.5
-      | Fair -> 0.2
-      | Hard -> 0.000000000075);
-    timers = default_timer ();
-  }
+let process_inputs status = 
+  match !cur_scene with
+  | Menu -> ()
 
 (* Execute the game *)
 let () =
   Random.self_init ();
-  let game = init_game PvE Hard in
-  run game
+  open_scene ();
+  loop_at_exit [ Button_down; Key_pressed ] process_inputs;
+  

@@ -2,6 +2,7 @@ open Board
 open Tetromino
 open Graphics
 open Bot
+open Settings
 
 (* TODO: make controls modular (player can choose them at the start of
    the game) *)
@@ -54,7 +55,7 @@ exception CantPlace of player
 let player i =
   {
     bot = false;
-    board = Array.make_matrix rows columns ' ';
+    board = Array.make_matrix (fst settings.board_size) (snd settings.board_size) ' ';
     board_pos = (150 + (650 * i), 50);
     bag_pos = 1;
     current_piece = get_from_bag 0;
@@ -74,7 +75,7 @@ let generate_players p_c b_c =
 let reset_player p =
   {
     p with
-    board = Array.make_matrix rows columns ' ';
+    board = Array.make_matrix (fst settings.board_size) (snd settings.board_size) ' ';
     bag_pos = 1;
     current_piece = get_from_bag 0;
     next_piece = get_from_bag 1;
