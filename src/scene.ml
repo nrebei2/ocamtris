@@ -13,20 +13,12 @@ type scene =
 
 let cur_scene = ref Settings
 
-(*Draws the button options on menu screen*)
-let draw_buttons () = ()
-
-(*Called from open_menu and processes input from user of mouse clicks*)
-let process_requests () = ()
-
-(*Called from open_menu and draws the different buttons*)
-let draw_menu () = ()
-
-(*Opens the initial menu screen*)
-let open_menu () = ()
-(* open_graph (Printf.sprintf " %dx800" (650 * List.length
-   game.players)) *)
-
+let string_of_scene scene =
+  match scene with
+  | Menu -> "Menu"
+  | Settings -> "Settings"
+  | Leaderboard -> "Leaderboard"
+  | Game -> "Ocamtris"
 
 let rec settings_buttons () =
   [
@@ -37,27 +29,24 @@ let rec settings_buttons () =
     scene_button Game (500, 100) (600, 200);
   ]
 
-and process_settings_input () = process_button_input (settings_buttons ())
+and menu_buttons () = []
 
-and open_settings () =
-  resize_window 650 800;
-  set_window_title "Settings";
-  List.iter (fun b -> b.draw ()) (settings_buttons ())
+and process_settings_input () =
+  process_button_input (settings_buttons ())
 
 and open_scene () =
-  clear_graph ();
+  set_window_title (string_of_scene !cur_scene);
   match !cur_scene with
-  | Menu -> open_menu ()
+  | Menu ->
+      resize_window 650 800;
+      List.iter (fun b -> b.draw ()) (menu_buttons ())
   | Settings ->
-      open_settings ()
-        
+      resize_window 650 800;
+      List.iter (fun b -> b.draw ()) (settings_buttons ())
   | Game -> play_game ()
   | Leaderboard ->
       resize_window 600 800;
       display_leaderboard 700
-
-(* | Settings -> open_settings () *)
-(* Random.self_init (); let game = init_game PvE Hard in run game *)
 
 and switch_scene scene =
   cur_scene := scene;
@@ -70,12 +59,6 @@ and scene_button scene bl tr =
     draw =
       (fun () ->
         moveto (fst bl) (snd bl);
-        draw_string
-          (match scene with
-          | Game -> "Game"
-          | Leaderboard -> "Leaderboard"
-          | Menu -> "Menu"
-          | Settings -> "Settings"));
+        draw_string (string_of_scene scene));
     pressed_action = (fun () -> switch_scene scene);
   }
-

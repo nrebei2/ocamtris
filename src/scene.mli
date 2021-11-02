@@ -20,8 +20,6 @@ val open_scene : unit -> unit
 
 val switch_scene : scene -> unit
 
-val open_settings : unit -> unit
-
 val process_settings_input : unit -> unit
 
 val scene_button : scene -> int * int -> int * int -> Button.button

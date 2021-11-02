@@ -10,7 +10,7 @@ let rec game_loop () =
     | Game -> process_game cur_game 
     | Settings -> process_settings_input () 
     | Leaderboard -> ()
-    | _ -> ()
+    | Menu -> ()
   end;
   game_loop ()
 
