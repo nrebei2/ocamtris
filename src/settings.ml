@@ -11,35 +11,42 @@ type difficulty =
   | Fair
   | Hard
 
-type settings = 
-{
+type settings = {
   mutable mode : mode;
   mutable diff : difficulty;
-  mutable board_size : int * int
+  mutable board_size : int * int;
 }
 
-let settings =
+(* default settings *)
+let settings = { mode = Alone; diff = Easy; board_size = (22, 10) }
+
+let difficulty_button diff bl tr =
   {
-    mode = Alone;
-    diff = Easy;
-    board_size = 22, 10
+    bottom_left = bl;
+    top_right = tr;
+    draw =
+      (fun () ->
+        moveto (fst bl) (snd bl);
+        draw_string
+          (match diff with
+          | Easy -> "Easy"
+          | Fair -> "Fair"
+          | Hard -> "Hard"));
+    pressed_action = (fun () -> settings.diff <- diff);
   }
 
-let buttons = [ theme_button Theme.Grayscale (100, 100) (200, 200) ]
+let mode_button mode bl tr =
+  {
+    bottom_left = bl;
+    top_right = tr;
+    draw =
+      (fun () ->
+        moveto (fst bl) (snd bl);
+        draw_string
+          (match mode with
+          | Alone -> "Alone"
+          | PvP -> "PvP"
+          | PvE -> "PvE"));
+    pressed_action = (fun () -> settings.mode <- mode);
+  }
 
-let draw_settings () =
-  set_window_title "Settings";
-  List.iter (fun b -> b.draw ()) buttons
-
-let rec process_settings_input status =
-  if status.button then
-    match get_button (mouse_pos ()) buttons with
-    | None -> ()
-    | Some b ->
-        b.pressed_action ()
-
-let open_settings () =
-  loop_at_exit [ Button_down ] process_settings_input;
-  open_graph " 650x800";
-  clear_graph ();
-  draw_settings ()

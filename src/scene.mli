@@ -12,9 +12,16 @@ type scene =
   | Leaderboard
   | Game
 
-
 val cur_scene : scene ref
 
 (* [open_scene] opens the menu if the scene is of type Menu, and runs
    the game if scene is of type Game.*)
 val open_scene : unit -> unit
+
+val switch_scene : scene -> unit
+
+val open_settings : unit -> unit
+
+val process_settings_input : unit -> unit
+
+val scene_button : scene -> int * int -> int * int -> Button.button

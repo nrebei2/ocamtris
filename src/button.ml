@@ -6,26 +6,13 @@ type button = {
   draw : unit -> unit;
   pressed_action : unit -> unit;
 }
+(** Reresentation type for a button. [bottom_left] is the buttons
+    position in the graphics screen, similarly for [top_right]. [draw]
+    is a function that draws the button to the screen. [press_action] is
+    a function that should be called when the button is pressed. *)
 
-let theme_button palette bl tr =
-  {
-    bottom_left = bl;
-    top_right = tr;
-    draw =
-      (fun () ->
-        let colors = Theme.[ I; O; T; S; Z; J ] in
-        List.iteri
-          (fun i c ->
-            set_color ((Theme.colors_of_pallete palette) c);
-            let height = (snd tr - snd bl) / List.length colors in
-            fill_rect (fst bl)
-              (snd bl + (height * i))
-              (fst tr - fst bl)
-              height)
-          colors);
-    pressed_action = (fun () -> Theme.cur_theme := (Theme.colors_of_pallete palette));
-  }
-
+(** [get_button mouse_pos button_list] returns the first button [b] in
+    [button_list] that [mouse_pos] in inside the bounds of. *)
 let rec get_button m_pos = function
   | [] -> None
   | b :: t ->
@@ -35,4 +22,15 @@ let rec get_button m_pos = function
         && snd m_pos >= snd b.bottom_left
         && snd m_pos <= snd b.top_right
       then Some b
-      else get_button m_pos t  
+      else get_button m_pos t
+
+(** [process_button_input buttons] processes user mouse cliks using
+    [Graphics.status] for [buttons]*)
+let process_button_input buttons =
+  let status = wait_next_event [ Button_down ] in
+  if status.button then
+    match get_button (mouse_pos ()) buttons with
+    | None -> ()
+    | Some b ->
+        b.pressed_action ();
+        print_endline "button pressed"

@@ -1,4 +1,5 @@
 open Graphics
+open Button
 
 type palletes =
   | Clean
@@ -59,3 +60,24 @@ let colors_of_pallete = function
 | Grayscale -> grayscale
 
 let cur_theme = ref grayscale
+
+(* A button for themes *)
+let theme_button palette bl tr =
+  {
+    bottom_left = bl;
+    top_right = tr;
+    draw =
+      (fun () ->
+        let colors = [ Z; J; S ] in
+        List.iteri
+          (fun i c ->
+            set_color ((colors_of_pallete palette) c);
+            let height = (snd tr - snd bl) / List.length colors in
+            fill_rect (fst bl)
+              (snd bl + (height * i))
+              (fst tr - fst bl)
+              height)
+          colors);
+    pressed_action =
+      (fun () -> cur_theme := colors_of_pallete palette);
+  }

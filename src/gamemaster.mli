@@ -18,11 +18,11 @@ type game = {
   mutable over : bool;
   mutable players : Player.player list;
   mutable gravity : float;
-  difficulty : float;
+  mutable difficulty : float;
   mutable timers : timers;
 }
 
-val cur_game : game option ref
+val cur_game : game
 
 (* [default_timer ()] returns [timer] where all fields are initialized
    as [0.] *)
@@ -30,3 +30,5 @@ val default_timer : unit -> timers
 
 (* [run game] starts the game given [game]'s specifications *)
 val play_game : unit -> unit
+
+val process_game : game -> unit

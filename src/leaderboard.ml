@@ -56,8 +56,10 @@ let add_score (new_score : string * int) (scores : (string * int) list)
   |> List.tl |> List.rev
 
 let display_leaderboard vertical_pos =
-  moveto 100 700;
+  moveto 100 vertical_pos;
+  set_color black;
   draw_string "leaderboard:";
+  let _, text_height = text_size "leaderboard:" in
   let rec draw_scores vertical_pos scores_lst = 
   match scores_lst with
   | [] -> ()
@@ -65,5 +67,5 @@ let display_leaderboard vertical_pos =
       moveto 100 vertical_pos;
       let player_name, player_score = h in
       draw_string (player_name ^ ": " ^ string_of_int player_score);
-      draw_scores vertical_pos t 
-  in draw_scores vertical_pos (("assets" ^ Filename.dir_sep ^ "leaderboard.json") |> from_json_file)
+      draw_scores (vertical_pos - text_height) t 
+  in draw_scores (vertical_pos - text_height) (("assets" ^ Filename.dir_sep ^ "leaderboard.json") |> from_json_file)

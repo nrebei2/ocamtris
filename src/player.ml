@@ -55,7 +55,11 @@ exception CantPlace of player
 let player i =
   {
     bot = false;
-    board = Array.make_matrix (fst settings.board_size) (snd settings.board_size) ' ';
+    board =
+      Array.make_matrix
+        (fst settings.board_size)
+        (snd settings.board_size)
+        ' ';
     board_pos = (150 + (650 * i), 50);
     bag_pos = 1;
     current_piece = get_from_bag 0;
@@ -63,7 +67,7 @@ let player i =
     held_piece = None;
     can_hold = true;
     score = 0;
-    controls = List.hd controls;
+    controls = List.nth controls (i mod 2);
     cleared_4_rows = false;
   }
 
@@ -75,7 +79,11 @@ let generate_players p_c b_c =
 let reset_player p =
   {
     p with
-    board = Array.make_matrix (fst settings.board_size) (snd settings.board_size) ' ';
+    board =
+      Array.make_matrix
+        (fst settings.board_size)
+        (snd settings.board_size)
+        ' ';
     bag_pos = 1;
     current_piece = get_from_bag 0;
     next_piece = get_from_bag 1;
@@ -244,19 +252,17 @@ and move_piece_down p =
 
 let process_human_players p_lst =
   if key_pressed () then
-    let event = wait_next_event [ Key_pressed ] in
+    let key = read_key () in
     let process_key p =
-      match event.key with
+      match key with
       | 'q' -> exit 0
-      | _ when event.key = p.controls.rotate_left ->
+      | _ when key = p.controls.rotate_left ->
           rotate_piece rotate_left p
-      | _ when event.key = p.controls.move_right ->
-          move_piece move_right p
-      | _ when event.key = p.controls.move_left ->
-          move_piece move_left p
-      | _ when event.key = p.controls.move_down -> move_piece_down p
-      | _ when event.key = p.controls.drop -> complete_move true p
-      | _ when event.key = p.controls.hold ->
+      | _ when key = p.controls.move_right -> move_piece move_right p
+      | _ when key = p.controls.move_left -> move_piece move_left p
+      | _ when key = p.controls.move_down -> move_piece_down p
+      | _ when key = p.controls.drop -> complete_move true p
+      | _ when key = p.controls.hold ->
           if p.can_hold then (
             hold_piece p;
             p.can_hold <- false)

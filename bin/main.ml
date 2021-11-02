@@ -1,15 +1,22 @@
-open Graphics 
+open Graphics
 open Game
 open Settings
 open Scene
+open Gamemaster
 
-let process_inputs status = 
-  match !cur_scene with
-  | Menu -> ()
+let rec game_loop () =
+  begin
+    match !cur_scene with
+    | Game -> process_game cur_game 
+    | Settings -> process_settings_input () 
+    | Leaderboard -> ()
+    | _ -> ()
+  end;
+  game_loop ()
 
 (* Execute the game *)
 let () =
   Random.self_init ();
+  open_graph " 600x800";
   open_scene ();
-  loop_at_exit [ Button_down; Key_pressed ] process_inputs;
-  
+  game_loop ()
