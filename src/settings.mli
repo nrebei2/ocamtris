@@ -16,6 +16,6 @@ type settings = {
 
 val settings : settings
 
-val difficulty_button : difficulty -> int * int -> int * int -> Button.button
+val difficulty_button : difficulty -> int * int -> Button.button
 
-val mode_button : mode -> int * int -> int * int -> Button.button
+val mode_button : mode -> int * int -> Button.button

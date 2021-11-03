@@ -56,6 +56,7 @@ let add_score (new_score : string * int) (scores : (string * int) list)
   |> List.tl |> List.rev
 
 let display_leaderboard vertical_pos =
+  resize_window 600 800;
   moveto 100 vertical_pos;
   set_color black;
   draw_string "leaderboard:";

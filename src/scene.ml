@@ -22,11 +22,16 @@ let string_of_scene scene =
 
 let rec settings_buttons () =
   [
-    theme_button Theme.Grayscale (100, 600) (200, 700);
-    theme_button Theme.Clean (300, 600) (400, 700);
-    difficulty_button Easy (100, 100) (200, 200);
-    mode_button PvP (300, 100) (400, 200);
-    scene_button Game (500, 100) (600, 200);
+    theme_button Grayscale (100, 600) (200, 700);
+    theme_button Clean (300, 600) (400, 700);
+    difficulty_button Easy (100, 150);
+    difficulty_button Fair (100, 125);
+    difficulty_button Hard (100, 100);
+    mode_button Alone (300, 150);
+    mode_button PvP (300, 125);
+    mode_button PvE (300, 100);
+    scene_button Game (500, 125);
+    scene_button Menu (500, 100);
   ]
 
 and menu_buttons () = []
@@ -52,13 +57,19 @@ and switch_scene scene =
   cur_scene := scene;
   open_scene ()
 
-and scene_button scene bl tr =
+and scene_button scene bl =
+  let text = string_of_scene scene in
+  let tr =
+    (fst (text_size text) + fst bl, snd (text_size text) + snd bl)
+  in
   {
+    name = "scene";
     bottom_left = bl;
     top_right = tr;
     draw =
       (fun () ->
+        set_color black;
         moveto (fst bl) (snd bl);
-        draw_string (string_of_scene scene));
+        draw_string text);
     pressed_action = (fun () -> switch_scene scene);
   }

@@ -1,6 +1,7 @@
 open Graphics
 
 type button = {
+  name : string;
   bottom_left : int * int;
   top_right : int * int;
   draw : unit -> unit;
@@ -33,4 +34,18 @@ let process_button_input buttons =
     | None -> ()
     | Some b ->
         b.pressed_action ();
-        print_endline "button pressed"
+        List.iter
+          (fun b2 -> if b2.name = b.name && b.name <> "scene" then b2.draw ())
+          buttons
+
+let draw_border bl tr =
+  set_line_width 3;
+  set_color black;
+  draw_rect (fst bl) (snd bl) (fst tr - fst bl) (snd tr - snd bl);
+  set_line_width 1
+
+let clear_border bl tr =
+  set_line_width 3;
+  set_color white;
+  draw_rect (fst bl) (snd bl) (fst tr - fst bl) (snd tr - snd bl);
+  set_line_width 1

@@ -38,7 +38,7 @@ let init_game () =
     | Alone -> generate_players 1 0
     | PvP -> generate_players 2 0
     | PvE -> generate_players 1 1);
-  cur_game.gravity <- 0.1 /. 1.;
+  cur_game.gravity <- 0.1 /. 10.;
   cur_game.difficulty <-
     (match Settings.settings.diff with
     | Easy -> 0.5
@@ -59,13 +59,11 @@ let save_to_leaderboard players =
         |> add_score ("temp name", p1.score)
       in
       let _ = save_leaderboard_file scores leaderboard_file in
-
       display_leaderboard 700
 
 (* p is the loser *)
 let rec game_over game p =
   game.over <- true;
-  clear_graph ();
   save_to_leaderboard game.players;
   moveto 350 700;
   draw_string "press r to retry, press q to quit"

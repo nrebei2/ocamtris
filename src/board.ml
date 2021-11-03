@@ -7,7 +7,7 @@ type board = char array array
 
 let color_cell color r c board_pos =
   let tile_size = 30 in
-  set_color color; 
+  set_color color;
   fill_rect
     ((c * tile_size) + fst board_pos)
     (((fst settings.board_size - r - 1) * tile_size) + snd board_pos)
@@ -28,21 +28,53 @@ let draw_2D_aray
       if b3 then
         match ar.(r).(c) with
         | ' ' -> ()
-        | _ -> color_cell (!cur_theme Preview) r' c' board_pos
+        | _ ->
+            color_cell
+              (Preview |> colors_of_pallete !cur_theme)
+              r' c' board_pos
       else if b2 then
         match ar.(r).(c) with
         | ' ' -> ()
-        | _ -> color_cell (!cur_theme Background) r' c' board_pos
+        | _ ->
+            color_cell
+              (Background |> colors_of_pallete !cur_theme)
+              r' c' board_pos
       else
         match ar.(r).(c) with
-        | 'i' -> color_cell (!cur_theme I)  r' c' board_pos
-        | 'o' -> color_cell (!cur_theme O)  r' c' board_pos
-        | 't' -> color_cell (!cur_theme T)  r' c' board_pos
-        | 's' -> color_cell (!cur_theme S)  r' c' board_pos
-        | 'z' -> color_cell (!cur_theme Z)  r' c' board_pos
-        | 'j' -> color_cell (!cur_theme J)  r' c' board_pos
-        | 'l' -> color_cell (!cur_theme L)  r' c' board_pos
-        | ' ' -> if b then color_cell (!cur_theme Background)  r' c' board_pos else ()
+        | 'i' ->
+            color_cell
+              (I |> colors_of_pallete !cur_theme)
+              r' c' board_pos
+        | 'o' ->
+            color_cell
+              (O |> colors_of_pallete !cur_theme)
+              r' c' board_pos
+        | 't' ->
+            color_cell
+              (T |> colors_of_pallete !cur_theme)
+              r' c' board_pos
+        | 's' ->
+            color_cell
+              (S |> colors_of_pallete !cur_theme)
+              r' c' board_pos
+        | 'z' ->
+            color_cell
+              (Z |> colors_of_pallete !cur_theme)
+              r' c' board_pos
+        | 'j' ->
+            color_cell
+              (J |> colors_of_pallete !cur_theme)
+              r' c' board_pos
+        | 'l' ->
+            color_cell
+              (L |> colors_of_pallete !cur_theme)
+              r' c' board_pos
+        | ' ' ->
+            if b then
+              color_cell
+                (Background |> colors_of_pallete !cur_theme)
+                r' c' board_pos
+            else ()
         | _ -> failwith "shouldnt happen ¯\\_(ツ)_/¯"
     done
   done
@@ -101,7 +133,8 @@ let clear_lines b =
       | _ -> Array.make (Array.length b.(0)) ' ' :: make (n - 1)
     in
     let new_board =
-      make (fst settings.board_size - List.length uncleared_rows) @ uncleared_rows
+      make (fst settings.board_size - List.length uncleared_rows)
+      @ uncleared_rows
     in
     new_board |> copy_to_2D_array b;
     true

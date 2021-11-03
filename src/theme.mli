@@ -17,6 +17,6 @@ type colors =
 
 val colors_of_pallete : palletes -> (colors -> Graphics.color)
 
-val cur_theme : (colors -> Graphics.color) ref
+val cur_theme : palletes ref
 
 val theme_button : palletes -> int * int -> int * int -> Button.button

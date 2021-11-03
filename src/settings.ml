@@ -20,33 +20,50 @@ type settings = {
 (* default settings *)
 let settings = { mode = Alone; diff = Easy; board_size = (22, 10) }
 
-let difficulty_button diff bl tr =
+let difficulty_button diff bl =
+  let text =
+    match diff with Easy -> "Easy" | Fair -> "Fair" | Hard -> "Hard"
+  in
+  let tr =
+    (fst (text_size text) + fst bl, snd (text_size text) + snd bl)
+  in
   {
+    name = "diff";
     bottom_left = bl;
     top_right = tr;
     draw =
       (fun () ->
+        clear_border bl tr;
+        if diff = settings.diff then draw_border bl tr;
+        set_color black;
         moveto (fst bl) (snd bl);
-        draw_string
-          (match diff with
-          | Easy -> "Easy"
-          | Fair -> "Fair"
-          | Hard -> "Hard"));
-    pressed_action = (fun () -> settings.diff <- diff);
+        draw_string text);
+    pressed_action =
+      (fun () ->
+        settings.diff <- diff;
+        draw_border bl tr);
   }
 
-let mode_button mode bl tr =
+let mode_button mode bl =
+  let text =
+    match mode with Alone -> "Alone" | PvP -> "PvP" | PvE -> "PvE"
+  in
+  let tr =
+    (fst (text_size text) + fst bl, snd (text_size text) + snd bl)
+  in
   {
+    name = "mode";
     bottom_left = bl;
     top_right = tr;
     draw =
       (fun () ->
+        clear_border bl tr;
+        if mode = settings.mode then draw_border bl tr;
+        set_color black;
         moveto (fst bl) (snd bl);
-        draw_string
-          (match mode with
-          | Alone -> "Alone"
-          | PvP -> "PvP"
-          | PvE -> "PvE"));
-    pressed_action = (fun () -> settings.mode <- mode);
+        draw_string text);
+    pressed_action =
+      (fun () ->
+        settings.mode <- mode;
+        draw_border bl tr);
   }
-

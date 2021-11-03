@@ -59,16 +59,18 @@ let colors_of_pallete = function
 | Retro -> retro
 | Grayscale -> grayscale
 
-let cur_theme = ref grayscale
+let cur_theme = ref Grayscale
 
 (* A button for themes *)
 let theme_button palette bl tr =
   {
+    name = "theme";
     bottom_left = bl;
     top_right = tr;
     draw =
       (fun () ->
-        let colors = [ Z; J; S ] in
+        clear_border bl tr;
+        let colors = [ S; J; Z ] in
         List.iteri
           (fun i c ->
             set_color ((colors_of_pallete palette) c);
@@ -77,7 +79,7 @@ let theme_button palette bl tr =
               (snd bl + (height * i))
               (fst tr - fst bl)
               height)
-          colors);
+          colors; if palette = !cur_theme then draw_border bl tr);
     pressed_action =
-      (fun () -> cur_theme := colors_of_pallete palette);
+      (fun () -> cur_theme := palette; draw_border bl tr;); 
   }
