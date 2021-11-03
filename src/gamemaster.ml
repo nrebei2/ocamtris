@@ -38,7 +38,12 @@ let init_game () =
     | Alone -> generate_players 1 0
     | PvP -> generate_players 2 0
     | PvE -> generate_players 1 1);
-  cur_game.gravity <- 0.1 /. 1.;
+  cur_game.gravity <-
+    (match Settings.settings.diff with
+    | Easy -> 0.1
+    | Fair -> 0.075
+    | Hard -> 0.05)
+    /. 1.;
   cur_game.difficulty <-
     (match Settings.settings.diff with
     | Easy -> 0.5
@@ -109,12 +114,12 @@ and process_game game =
 and init_screen game =
   resize_window (650 * List.length game.players) 800;
   draw_title ();
-  draw_next_piece ();
-  draw_instructions ();
   List.iter
     (fun x ->
       draw_score x;
       draw_outline x.board_pos;
+      draw_next_piece x.board_pos;
+      draw_instructions x;
       spawn_piece x)
     game.players
 

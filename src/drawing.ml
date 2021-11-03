@@ -1,5 +1,6 @@
 open Graphics
 open Settings
+open Player
 
 (* [draw_title ()] draws the Ocamtris title at the top of the screen. *)
 
@@ -12,34 +13,38 @@ let draw_title () =
 
 (* [draw_next_piece ()] draws the label for the next tetromino peice. *)
 
-let draw_next_piece () =
+let draw_next_piece board_pos =
   moveto
-    (550 - (fst (text_size "Ocamtris") / 2))
-    (550 - snd (text_size "Ocamtris"));
+    ((fst board_pos + 400) - (fst (text_size "Ocamtris") / 2))
+    ((snd board_pos + 500) - snd (text_size "Ocamtris"));
   draw_string "Next Piece"
 
 (* [draw_instructions ()] draws the instructions for the game.*)
-let draw_instructions () =
+let draw_instructions p =
   moveto
-    (500 - (fst (text_size "Ocamtris") / 2))
+    ((fst p.board_pos + 350) - (fst (text_size "Ocamtris") / 2))
     (350 - snd (text_size "Ocamtris"));
   draw_string "Controls:";
   moveto
-    (500 - (fst (text_size "Ocamtris") / 2))
+    ((fst p.board_pos + 350) - (fst (text_size "Ocamtris") / 2))
     (325 - snd (text_size "Ocamtris"));
-  draw_string "- Use \"A\" and \"D\" keys";
+  draw_string (Printf.sprintf "- Use \"%c\" and \"%c\" keys" p.controls.move_left p.controls.move_right);
   moveto
-    (500 - (fst (text_size "Ocamtris") / 2))
+    ((fst p.board_pos + 350) - (fst (text_size "Ocamtris") / 2))
     (310 - snd (text_size "Ocamtris"));
   draw_string " to move left and right";
   moveto
-    (500 - (fst (text_size "Ocamtris") / 2))
+    ((fst p.board_pos + 350) - (fst (text_size "Ocamtris") / 2))
     (285 - snd (text_size "Ocamtris"));
-  draw_string "- \"M\" to rotate left";
+  draw_string (Printf.sprintf "- \"%c\" to rotate left" p.controls.rotate_left);
   moveto
-    (500 - (fst (text_size "Ocamtris") / 2))
+    ((fst p.board_pos + 350) - (fst (text_size "Ocamtris") / 2))
     (260 - snd (text_size "Ocamtris"));
-  draw_string "- \"N\" to drop isntantly"
+  draw_string (Printf.sprintf "- \"%c\" to drop isntantly" p.controls.drop);
+  moveto
+    ((fst p.board_pos + 350) - (fst (text_size "Ocamtris") / 2))
+    (235 - snd (text_size "Ocamtris"));
+  draw_string (Printf.sprintf "- \"%c\" to soft drop" p.controls.move_down)
 
 (* [draw_outline p] draws the grid outline of the board to the GUI
    window, with its lower left position at [p]*)
