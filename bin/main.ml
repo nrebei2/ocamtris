@@ -7,10 +7,10 @@ open Gamemaster
 let rec game_loop () =
   begin
     match !cur_scene with
-    | Game -> process_game cur_game 
-    | Settings -> process_settings_input () 
-    | Leaderboard -> ()
-    | Menu -> ()
+    | Game -> process_game cur_game
+    | Settings -> process_settings_input ()
+    | Leaderboard -> process_leaderboard_input ()
+    | Menu -> process_menu_input ()
   end;
   game_loop ()
 

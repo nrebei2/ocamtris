@@ -11,7 +11,7 @@ type scene =
   | Leaderboard
   | Game
 
-let cur_scene = ref Settings
+let cur_scene = ref Menu
 
 let string_of_scene scene =
   match scene with
@@ -34,10 +34,22 @@ let rec settings_buttons () =
     scene_button Menu (500, 100);
   ]
 
-and menu_buttons () = []
+and menu_buttons () =
+  [
+    scene_button Game (300, 600);
+    scene_button Settings (300, 400);
+    scene_button Leaderboard (300, 200);
+  ]
+
+and leaderboard_buttons () = [ scene_button Menu (500, 100) ]
 
 and process_settings_input () =
   process_button_input (settings_buttons ())
+
+and process_menu_input () = process_button_input (menu_buttons ())
+
+and process_leaderboard_input () =
+  process_button_input (leaderboard_buttons ())
 
 and open_scene () =
   set_window_title (string_of_scene !cur_scene);
@@ -50,8 +62,9 @@ and open_scene () =
       List.iter (fun b -> b.draw ()) (settings_buttons ())
   | Game -> play_game ()
   | Leaderboard ->
-      resize_window 600 800;
-      display_leaderboard 700
+      resize_window 650 800;
+      display_leaderboard 700;
+      List.iter (fun b -> b.draw ()) (leaderboard_buttons ())
 
 and switch_scene scene =
   cur_scene := scene;

@@ -14,10 +14,24 @@ type scene =
 
 val cur_scene : scene ref
 
-(* [open_scene] opens the menu if the scene is of type Menu, and runs
-   the game if scene is of type Game.*)
 val open_scene : unit -> unit
+(** [open_scene] opens the current scene. [open_scene] opens the menu if
+    the scene is of type Menu, and runs the game if scene is of type
+    Game. Additionally, if the scene is of type leaderboard, it displays
+    the current leaderboard.*)
 
 val switch_scene : scene -> unit
+(** [switch_scene s] takes a scene [s] and sets the current scene to
+    scene [s]. It then opens the current scene.*)
 
 val process_settings_input : unit -> unit
+(** [process_settings_input] processes user mouse clicks for all the
+    buttons in the Settings scene.*)
+
+val process_menu_input : unit -> unit
+(** [process_menu_input] processes user mouse clicks for all the buttons
+    in the Menu scene.*)
+
+val process_leaderboard_input : unit -> unit
+(** [process_leaderboard_input] processes user mouse clicks for all the
+    buttons in the Leaderboard scene.*)
