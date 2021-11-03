@@ -38,7 +38,7 @@ let init_game () =
     | Alone -> generate_players 1 0
     | PvP -> generate_players 2 0
     | PvE -> generate_players 1 1);
-  cur_game.gravity <- 0.1 /. 10.;
+  cur_game.gravity <- 0.1 /. 1.;
   cur_game.difficulty <-
     (match Settings.settings.diff with
     | Easy -> 0.5

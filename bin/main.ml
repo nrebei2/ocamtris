@@ -1,6 +1,5 @@
 open Graphics
 open Game
-open Settings
 open Scene
 open Gamemaster
 
