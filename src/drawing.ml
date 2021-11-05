@@ -44,7 +44,11 @@ let draw_instructions p =
   moveto
     ((fst p.board_pos + 350) - (fst (text_size "Ocamtris") / 2))
     (235 - snd (text_size "Ocamtris"));
-  draw_string (Printf.sprintf "- \"%c\" to soft drop" p.controls.move_down)
+  draw_string (Printf.sprintf "- \"%c\" to soft drop" p.controls.move_down);
+  moveto
+    ((fst p.board_pos + 350) - (fst (text_size "Ocamtris") / 2))
+    (210 - snd (text_size "Ocamtris"));
+  draw_string (Printf.sprintf "- \"%c\" to hold" p.controls.hold)
 
 (* [draw_outline p] draws the grid outline of the board to the GUI
    window, with its lower left position at [p]*)

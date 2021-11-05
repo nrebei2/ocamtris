@@ -105,9 +105,6 @@ let rec rotate_array_left ar =
   ar |> Array.to_list |> List.map Array.to_list |> rotate_list' []
   |> Array.of_list |> Array.map Array.of_list
 
-(* TODO: Change col and row based on rotation, save it till whoever
-   wants to bother with the rotation specifics:
-   https://tetris.fandom.com/wiki/SRS *)
 let rotate_left t = { t with state = rotate_array_left t.state; rot = if t.rot = 3 then 0 else t.rot + 1 }
 
 let rotate_right t = t |> rotate_left |> rotate_left |> rotate_left
@@ -118,7 +115,8 @@ let move_right t = { t with col = t.col + 1 }
 
 let move_down t = { t with row = t.row + 1 }
 
-(* Implementation of https://en.wikipedia.org/wiki/Fisher–Yates_shuffle *)
+(* Implementation of https://en.wikipedia.org/wiki/Fisher–Yates_shuffle 
+  TODO: might be bugged ?? ?  ?? ? *)
 let shuffle x =
   let rec shuffle_aux n x =
     match n with
