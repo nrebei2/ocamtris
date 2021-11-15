@@ -87,7 +87,7 @@ let save_settings_file (settings : settings) (filename : string) =
   Yojson.to_file filename (to_json settings)
 
 let settings = from_json_file settings_file
-(* default settings *)
+(* load existing settings *)
 
 let mode_button mode bl =
   let text =

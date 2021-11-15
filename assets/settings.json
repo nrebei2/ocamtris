@@ -1,1 +1,5 @@
-{"mode":"Alone","difficulty":"Easy","theme":"Clean"}
+{
+    "mode": "PvP",
+    "difficulty": "Hard",
+    "theme": "Grayscale"
+}
