@@ -30,49 +30,49 @@ let draw_2D_aray
         | ' ' -> ()
         | _ ->
             color_cell
-              (Preview |> colors_of_pallete !cur_theme)
+              (Preview |> colors_of_pallete settings.theme)
               r' c' board_pos
       else if b2 then
         match ar.(r).(c) with
         | ' ' -> ()
         | _ ->
             color_cell
-              (Background |> colors_of_pallete !cur_theme)
+              (Background |> colors_of_pallete settings.theme)
               r' c' board_pos
       else
         match ar.(r).(c) with
         | 'i' ->
             color_cell
-              (I |> colors_of_pallete !cur_theme)
+              (I |> colors_of_pallete settings.theme)
               r' c' board_pos
         | 'o' ->
             color_cell
-              (O |> colors_of_pallete !cur_theme)
+              (O |> colors_of_pallete settings.theme)
               r' c' board_pos
         | 't' ->
             color_cell
-              (T |> colors_of_pallete !cur_theme)
+              (T |> colors_of_pallete settings.theme)
               r' c' board_pos
         | 's' ->
             color_cell
-              (S |> colors_of_pallete !cur_theme)
+              (S |> colors_of_pallete settings.theme)
               r' c' board_pos
         | 'z' ->
             color_cell
-              (Z |> colors_of_pallete !cur_theme)
+              (Z |> colors_of_pallete settings.theme)
               r' c' board_pos
         | 'j' ->
             color_cell
-              (J |> colors_of_pallete !cur_theme)
+              (J |> colors_of_pallete settings.theme)
               r' c' board_pos
         | 'l' ->
             color_cell
-              (L |> colors_of_pallete !cur_theme)
+              (L |> colors_of_pallete settings.theme)
               r' c' board_pos
         | ' ' ->
             if b then
               color_cell
-                (Background |> colors_of_pallete !cur_theme)
+                (Background |> colors_of_pallete settings.theme)
                 r' c' board_pos
             else ()
         | _ -> failwith "shouldnt happen ¯\\_(ツ)_/¯"

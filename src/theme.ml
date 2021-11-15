@@ -1,12 +1,8 @@
 open Graphics
 open Button
+open Settings
 
-type palletes =
-  | Clean
-  | Retro
-  | Grayscale
-
-type colors = 
+type colors =
   | Background
   | Outline
   | Preview
@@ -26,7 +22,7 @@ let clean = function
   | O -> yellow
   | T -> magenta
   | S -> green
-  | Z -> red 
+  | Z -> red
   | J -> blue
   | L -> rgb 255 165 0
 
@@ -38,7 +34,7 @@ let retro = function
   | O -> rgb 1 1 1
   | T -> rgb 1 1 1
   | S -> rgb 1 1 1
-  | Z -> rgb 1 1 1 
+  | Z -> rgb 1 1 1
   | J -> rgb 1 1 1
   | L -> rgb 1 1 1
 
@@ -50,16 +46,14 @@ let grayscale = function
   | O -> rgb 70 70 70
   | T -> rgb 100 100 100
   | S -> rgb 120 120 120
-  | Z -> rgb 150 150 150 
+  | Z -> rgb 150 150 150
   | J -> rgb 180 180 180
   | L -> rgb 30 30 30
-  
-let colors_of_pallete = function
-| Clean -> clean
-| Retro -> retro
-| Grayscale -> grayscale
 
-let cur_theme = ref Grayscale
+let colors_of_pallete = function
+  | Clean -> clean
+  | Retro -> retro
+  | Grayscale -> grayscale
 
 (* A button for themes *)
 let theme_button palette bl tr =
@@ -79,7 +73,11 @@ let theme_button palette bl tr =
               (snd bl + (height * i))
               (fst tr - fst bl)
               height)
-          colors; if palette = !cur_theme then draw_border bl tr);
+          colors;
+        if palette = settings.theme then draw_border bl tr);
     pressed_action =
-      (fun () -> cur_theme := palette; draw_border bl tr;); 
+      (fun () ->
+        settings.theme <- palette;
+        save_settings_file settings settings_file;
+        draw_border bl tr);
   }

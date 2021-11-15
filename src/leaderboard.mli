@@ -11,12 +11,12 @@ type leaderboard_scores = score list
 (** The type of the top 10 scores on the leaderboard. *)
 
 val from_json_file : string -> leaderboard_scores
-(** [from_json_file f] is the leaderboard that json file [j] represents.
-    Requires: [j] is the filename of a valid JSON leaderboard
+(** [from_json_file f] is the leaderboard that json file [f] represents.
+    Requires: [f] is the filename of a valid JSON leaderboard
     representation. *)
 
 val save_leaderboard_file : leaderboard_scores -> string -> unit
-(** [save_leaderboard_file s f] exports scores [s] to file [f]. *)
+(** [save_leaderboard_file s f] exports scores [s] to filename [f]. *)
 
 val add_score : score -> leaderboard_scores -> leaderboard_scores
 (** Add a new score to the leaderboard *)

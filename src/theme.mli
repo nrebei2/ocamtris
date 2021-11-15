@@ -1,9 +1,4 @@
-type palletes =
-  | Clean
-  | Retro
-  | Grayscale
-
-type colors = 
+type colors =
   | Background
   | Outline
   | Preview
@@ -15,8 +10,7 @@ type colors =
   | J
   | L
 
-val colors_of_pallete : palletes -> (colors -> Graphics.color)
+val colors_of_pallete : Settings.palletes -> colors -> Graphics.color
 
-val cur_theme : palletes ref
-
-val theme_button : palletes -> int * int -> int * int -> Button.button
+val theme_button :
+  Settings.palletes -> int * int -> int * int -> Button.button
