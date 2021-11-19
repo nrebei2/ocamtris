@@ -19,6 +19,8 @@ type game = {
 
 let default_timer () = { update = 0.; drop_timer = 0.; bot_timer = 0. }
 
+let leaderboard_name = ref "No Name"
+
 let cur_game =
   {
     over = true;
@@ -61,7 +63,7 @@ let save_to_leaderboard players =
       in
       let scores =
         leaderboard_file |> from_json_file
-        |> add_score ("temp name", p1.score)
+        |> add_score (!leaderboard_name, p1.score)
       in
       let _ = save_leaderboard_file scores leaderboard_file in
       display_leaderboard 700
@@ -90,7 +92,7 @@ and process_timers game =
 
   game.timers.update <- Sys.time ()
 
-and process_game game =
+and process_game game player_name =
   if not game.over then (
     process_timers game;
 
@@ -109,7 +111,8 @@ and process_game game =
             List.iter process_bot_player p;
             game.timers.bot_timer <- 0.)
     with CantPlace p -> game_over game p)
-  else process_game_over game
+  else process_game_over game;
+  leaderboard_name := player_name
 
 and init_screen game =
   resize_window (650 * List.length game.players) 800;
