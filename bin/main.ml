@@ -25,14 +25,14 @@ let rec game_loop () =
 
 (* Execute the game *)
 let () =
-  Random.self_init ();
-  ANSITerminal.print_string [ ANSITerminal.red ]
-    "\n\nWelcome to Ocamtris.\n";
-  print_endline "Please enter your name.\n";
-  print_string "> ";
-  match read_line () with
-  | exception End_of_file -> ()
-  | name ->
+    Random.self_init ();
+    ANSITerminal.print_string [ ANSITerminal.red ]
+      "\n\nWelcome to Ocamtris.\n";
+    print_endline "Please enter your name.\n";
+    print_string "> ";
+    match read_line () with
+    | exception End_of_file -> ()
+    | name ->
       player_name := name;
       open_graph " 600x800";
       open_scene ();

@@ -5,6 +5,8 @@ open Settings
 
 type board = char array array
 
+(* TODO: color from any position, and remove repeated code in
+   draw_2D_array*)
 let color_cell color r c board_pos =
   let tile_size = 30 in
   set_color color;
@@ -25,50 +27,24 @@ let draw_2D_aray
     for c = 0 to Array.length ar.(0) - 1 do
       let r' = r + row_start in
       let c' = c + column_start in
+      let theme c = c |> colors_of_pallete settings.theme in
       if b3 then
         match ar.(r).(c) with
         | ' ' -> ()
-        | _ ->
-            color_cell
-              (Preview |> colors_of_pallete settings.theme)
-              r' c' board_pos
+        | _ -> color_cell (theme Preview) r' c' board_pos
       else if b2 then
         match ar.(r).(c) with
         | ' ' -> ()
-        | _ ->
-            color_cell
-              (Background |> colors_of_pallete settings.theme)
-              r' c' board_pos
+        | _ -> color_cell (theme Background) r' c' board_pos
       else
         match ar.(r).(c) with
-        | 'i' ->
-            color_cell
-              (I |> colors_of_pallete settings.theme)
-              r' c' board_pos
-        | 'o' ->
-            color_cell
-              (O |> colors_of_pallete settings.theme)
-              r' c' board_pos
-        | 't' ->
-            color_cell
-              (T |> colors_of_pallete settings.theme)
-              r' c' board_pos
-        | 's' ->
-            color_cell
-              (S |> colors_of_pallete settings.theme)
-              r' c' board_pos
-        | 'z' ->
-            color_cell
-              (Z |> colors_of_pallete settings.theme)
-              r' c' board_pos
-        | 'j' ->
-            color_cell
-              (J |> colors_of_pallete settings.theme)
-              r' c' board_pos
-        | 'l' ->
-            color_cell
-              (L |> colors_of_pallete settings.theme)
-              r' c' board_pos
+        | 'i' -> color_cell (theme I) r' c' board_pos
+        | 'o' -> color_cell (theme O) r' c' board_pos
+        | 't' -> color_cell (theme T) r' c' board_pos
+        | 's' -> color_cell (theme S) r' c' board_pos
+        | 'z' -> color_cell (theme Z) r' c' board_pos
+        | 'j' -> color_cell (theme J) r' c' board_pos
+        | 'l' -> color_cell (theme L) r' c' board_pos
         | ' ' ->
             if b then
               color_cell
@@ -138,6 +114,22 @@ let clear_lines b =
     in
     new_board |> copy_to_2D_array b;
     true
+
+
+
+(* let add_garbage n b =
+  let rec create_garbage_line n b =
+    match n with
+    | 0 -> []
+    | _ ->
+        let l = Array.make (Array.length b.(0)) 'g' in
+        l.(Random.int (Array.length b.(0))) <- ' ';
+        l :: create_garbage_line (n - 1) b
+    in let new_board =
+      create_garbage_line n b
+      @ uncleared_rows
+    in
+    new_board |> copy_to_2D_array b *)
 
 let check_valid t b =
   let checks =
