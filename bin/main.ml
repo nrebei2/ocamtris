@@ -33,6 +33,7 @@ let () =
   match read_line () with
   | exception End_of_file -> ()
   | name ->
+      print_endline ("Hello " ^ name ^ "! Opening game window...");
       player_name := name;
       open_graph " 600x800";
       open_scene ();
