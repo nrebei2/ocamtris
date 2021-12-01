@@ -215,6 +215,9 @@ and move_piece f p =
 and rotate_piece f p =
   match process_wall_kicks f p with Some x -> place x p | None -> ()
 
+(* and send_garbage l p = 
+ garbage_lines l p.board *)
+
 and complete_move should_drop p =
   draw_tetromino ~white_out:true p.current_piece p.board_pos;
   draw_tetromino
@@ -223,13 +226,27 @@ and complete_move should_drop p =
   if should_drop then (
     drop p.current_piece p.board;
     let num_rows_cleared = cleared_rows p.board in
-    (match num_rows_cleared with
-    | 1 -> p.score <- p.score + 100
-    | 2 -> p.score <- p.score + 300
-    | 3 -> p.score <- p.score + 500
-    | 4 when p.cleared_4_rows -> p.score <- p.score + 1200
-    | 4 when not p.cleared_4_rows -> p.score <- p.score + 800
-    | _ -> ());
+    let garbage_lines =
+      match num_rows_cleared with
+      | 1 ->
+          p.score <- p.score + 100;
+          0
+      | 2 ->
+          p.score <- p.score + 300;
+          1
+      | 3 ->
+          p.score <- p.score + 500;
+          2
+      | 4 when p.cleared_4_rows ->
+          p.score <- p.score + 1200;
+          4
+      | 4 when not p.cleared_4_rows ->
+          p.score <- p.score + 800;
+          4
+      | _ -> 0
+    in
+    (* if p.cleared_4_rows then send_garbage (garbage_lines + 1) p
+    else send_garbage garbage_lines p; *)
     if num_rows_cleared < 4 then p.cleared_4_rows <- false
     else p.cleared_4_rows <- true;
     draw_score p;

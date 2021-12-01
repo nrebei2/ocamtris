@@ -37,9 +37,6 @@ let generate_theme_buttons (themes : palletes list) : button list =
 let rec settings_buttons () =
   generate_theme_buttons [ Grayscale; Clean; Soft ]
   @ [
-      (* theme_button Grayscale (100, 600) (200, 700); theme_button
-         Clean (300, 600) (400, 700); theme_button Retro (300, 600)
-         (400, 700); theme_button Soft (300, 600) (400, 700); *)
       difficulty_button Easy (100, 150);
       difficulty_button Fair (100, 125);
       difficulty_button Hard (100, 100);
