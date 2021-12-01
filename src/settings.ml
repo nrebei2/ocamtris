@@ -16,6 +16,7 @@ type palletes =
   | Clean
   | Retro
   | Grayscale
+  | Soft
 
 type settings = {
   mutable mode : mode;
@@ -46,6 +47,7 @@ let config_of_json json : settings =
     | "Clean" -> Clean
     | "Retro" -> Retro
     | "Grayscale" -> Grayscale
+    | "Soft" -> Soft
     | _ -> failwith "invalid theme"
   in
   { diff = difficulty; mode; board_size = (22, 10); theme }
@@ -75,6 +77,7 @@ let to_json (settings : settings) : Yojson.t =
     | Clean -> "Clean"
     | Retro -> "Retro"
     | Grayscale -> "Grayscale"
+    | Soft -> "Soft"
   in
   `Assoc
     [

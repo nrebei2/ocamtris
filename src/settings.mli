@@ -12,6 +12,7 @@ type palletes =
   | Clean
   | Retro
   | Grayscale
+  | Soft
 
 type settings = {
   mutable mode : mode;

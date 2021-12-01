@@ -50,10 +50,24 @@ let grayscale = function
   | J -> rgb 180 180 180
   | L -> rgb 30 30 30
 
+let soft = function
+  | Background -> white
+  | Outline -> black
+  | Preview -> rgb 220 220 220
+  | I -> rgb 255 215 1 (* FFD701 *)
+  | O -> rgb 254 172 196
+  | T -> rgb 0 180 197 (* 00B4C5 *)
+  | S -> rgb 230 128 194 (* E680C2 *)
+  | Z -> rgb 208 164 255 (* FE6B63 *)
+  | J -> rgb 148 231 235
+  | L -> rgb 250 114 99
+(* FA7263 *)
+
 let colors_of_pallete = function
   | Clean -> clean
   | Retro -> retro
   | Grayscale -> grayscale
+  | Soft -> soft
 
 (* A button for themes *)
 let theme_button palette bl tr =
