@@ -40,8 +40,9 @@ let rec settings_buttons () =
       difficulty_button Easy (100, 150);
       difficulty_button Fair (100, 125);
       difficulty_button Hard (100, 100);
-      mode_button Alone (300, 125);
-      mode_button PvP (300, 100);
+      mode_button Alone (300, 150);
+      mode_button PvP (300, 125);
+      mode_button PvE (300, 100);
       scene_button Game (500, 125);
       scene_button Menu (500, 100);
     ]
