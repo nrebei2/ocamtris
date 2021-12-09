@@ -108,44 +108,46 @@ let draw_score (p : player) =
   moveto (fst p.board_pos + 320) (snd p.board_pos + 650);
   draw_string score_text
 
+let kick_translations cur off_d p =
+  Array.map2
+    (fun x y -> (fst x - fst y, snd x - snd y))
+    off_d.(p.current_piece.rot)
+    off_d.(cur.rot)
+
+let translate x cur off_d p =
+  {
+    cur with
+    row = cur.row + snd (kick_translations cur off_d p).(x);
+    col = cur.col + fst (kick_translations cur off_d p).(x);
+  }
+
+let process_wall_kicks_helper cur p off_d =
+  let check x = check_valid (translate x cur off_d p) p.board in
+  match cur.name with
+  | 'o' -> begin
+      match 0 with
+      | _ when check 0 -> Some (translate 0 cur off_d p)
+      | _ -> None
+    end
+  | _ -> begin
+      match 0 with
+      | _ when check 0 -> Some (translate 0 cur off_d p)
+      | _ when check 1 -> Some (translate 1 cur off_d p)
+      | _ when check 2 -> Some (translate 2 cur off_d p)
+      | _ when check 3 -> Some (translate 3 cur off_d p)
+      | _ when check 4 -> Some (translate 4 cur off_d p)
+      | _ -> None
+    end
+
 let process_wall_kicks f p =
   let cur = f p.current_piece in
   match cur.name with
   | 'o' -> if check_valid cur p.board then Some cur else None
-  | _ -> (
+  | _ ->
       let off_d =
         match cur.name with 'i' -> i_offset_data | _ -> offset_data
       in
-      let kick_translations =
-        Array.map2
-          (fun x y -> (fst x - fst y, snd x - snd y))
-          off_d.(p.current_piece.rot)
-          off_d.(cur.rot)
-      in
-
-      let translate x =
-        {
-          cur with
-          row = cur.row + snd kick_translations.(x);
-          col = cur.col + fst kick_translations.(x);
-        }
-      in
-      let check x = check_valid (translate x) p.board in
-      match cur.name with
-      | 'o' -> begin
-          match 0 with
-          | _ when check 0 -> Some (translate 0)
-          | _ -> None
-        end
-      | _ -> begin
-          match 0 with
-          | _ when check 0 -> Some (translate 0)
-          | _ when check 1 -> Some (translate 1)
-          | _ when check 2 -> Some (translate 2)
-          | _ when check 3 -> Some (translate 3)
-          | _ when check 4 -> Some (translate 4)
-          | _ -> None
-        end)
+      process_wall_kicks_helper cur p off_d
 
 let rec spawn_piece p =
   draw_preview p;
@@ -245,7 +247,7 @@ and complete_move should_drop p =
       | 3 ->
           p.score <- p.score + 500;
           2
-      | 4 when p.cleared_4_rows -> 
+      | 4 when p.cleared_4_rows ->
           p.score <- p.score + 1200;
           4
       | 4 when not p.cleared_4_rows ->

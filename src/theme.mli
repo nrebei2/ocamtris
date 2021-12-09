@@ -1,3 +1,5 @@
+(** each color is a different part of the came that needs a distinct
+    color, i.e. tetrominoes and the background. *)
 type colors =
   | Background
   | Outline
@@ -9,8 +11,6 @@ type colors =
   | Z
   | J
   | L
-(* each color is a different part of the came that needs a distinct
-   color, i.e. tetrominoes and the background. *)
 
 val colors_of_pallete : Settings.palletes -> colors -> Graphics.color
 (** [colors_of_pallete ps c] outputs the color for piece c in pallete
