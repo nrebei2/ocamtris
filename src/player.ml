@@ -3,6 +3,7 @@ open Tetromino
 open Graphics
 open Bot
 open Settings
+open Yojson.Basic.Util
 
 (* TODO: make controls modular (player can choose them at the start of
    the game) *)
@@ -16,23 +17,61 @@ type controls = {
   hold : char;
 }
 
+let controls_of_json json =
+  let get p c =
+    (json |> member "controls" |> to_list
+    |> List.find (fun x -> x |> member "id" |> to_string = p)
+    |> member c |> to_string).[0]
+  in
+  [
+    {
+      move_left = get "player" "left";
+      move_right = get "player" "right";
+      rotate_left = get "player" "rotate left";
+      move_down = get "player" "move down";
+      drop = get "player" "drop";
+      hold = get "player" "hold";
+    };
+    {
+      move_left = get "player1" "left";
+      move_right = get "player1" "right";
+      rotate_left = get "player1" "rotate left";
+      move_down = get "player1" "move down";
+      drop = get "player1" "drop";
+      hold = get "player1" "hold";
+    };
+    {
+      move_left = get "player2" "left";
+      move_right = get "player2" "right";
+      rotate_left = get "player2" "rotate left";
+      move_down = get "player2" "move down";
+      drop = get "player2" "drop";
+      hold = get "player2" "hold";
+    };
+  ]
+
+let settings_controls =
+  let json_contents = Yojson.Basic.from_file "assets/controls.json" in
+  try controls_of_json json_contents
+  with Type_error (s, _) -> failwith ("Parsing error: " ^ s)
+
 let controls =
   [
     {
       move_left = 'a';
       move_right = 'd';
-      rotate_left = 'm';
+      rotate_left = '1';
       move_down = 's';
-      drop = 'n';
-      hold = 'h';
+      drop = '2';
+      hold = '3';
     };
     {
       move_left = 'j';
       move_right = 'l';
-      rotate_left = 'p';
+      rotate_left = ']';
       move_down = 'k';
-      drop = 'o';
-      hold = 'i';
+      drop = '[';
+      hold = 'p';
     };
   ]
 
@@ -74,7 +113,10 @@ let player i =
     held_piece = None;
     can_hold = true;
     score = 0;
-    controls = List.nth controls (i mod 2);
+    controls =
+      (match settings.mode with
+      | Alone | PvE -> List.hd settings_controls
+      | _ -> List.nth settings_controls ((i + 1) mod 3));
     cleared_4_rows = false;
     garbage_info = { drop = false; inc = 0; send = 0 };
   }

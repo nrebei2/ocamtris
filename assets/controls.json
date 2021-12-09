@@ -1,0 +1,30 @@
+{"controls": [
+  {
+    "id": "player",
+    "left": "a",
+    "right": "d",
+    "rotate left": "m",
+    "move down": "s",
+    "drop": "n",
+    "hold": "h"
+  },
+  {
+    "id": "player1",
+    "left": "a",
+    "right": "d",
+    "rotate left": "1",
+    "move down": "s",
+    "drop": "2",
+    "hold": "3"
+  },
+  {
+    "id": "player2",
+    "left": "j",
+    "right": "l",
+    "rotate left": "]",
+    "move down": "k",
+    "drop": "[",
+    "hold": "p"
+  }
+ ]
+}

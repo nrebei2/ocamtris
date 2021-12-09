@@ -152,7 +152,7 @@ and init_screen game =
       draw_score x;
       draw_outline x.board_pos;
       draw_next_piece x.board_pos;
-      draw_instructions x;
+      if not x.bot then draw_instructions x;
       spawn_piece x)
     game.players
 
