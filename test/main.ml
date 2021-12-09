@@ -1,11 +1,4 @@
-(*
-
-What we did:
-stuff
-
-
-*)
-
+(* What we did: stuff *)
 
 open OUnit2
 open Game
@@ -331,6 +324,26 @@ let board_tests =
          ignore (clear_lines original_b);
          original_b)
         ~printer:(pp_board pp_string) );
+    ( "lowest_possible 2x2" >:: fun _ ->
+      assert_equal
+        {
+          name = 't';
+          state = [| [| 'l'; 'l' |] |];
+          col = 0;
+          row = 0;
+          rot = 0;
+        }
+        (let b = [| [| ' '; ' ' |]; [| 'o'; ' ' |] |] in
+         let t =
+           {
+             name = 't';
+             state = [| [| 'l'; 'l' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+         in
+         get_lowest_possible t b) );
     ( "lowest_possible middle row" >:: fun _ ->
       assert_equal
         {
