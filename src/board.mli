@@ -13,9 +13,9 @@ type board = char array array
     filling a cell at the position, corresponding to [t.state] for a
     tetromino [t].*)
 
-(* [draw_board b p] draws the entire board [b] to the GUI window, with
-   its lower left position at [p] *)
 val draw_board : board -> int * int -> unit
+(** [draw_board b p] draws the entire board [b] to the GUI window, with
+    its lower left position at [p] *)
 
 val draw_tetromino :
   ?white_out:bool ->

@@ -35,14 +35,20 @@ let process_button_input buttons =
     | Some b ->
         b.pressed_action ();
         List.iter
-          (fun b2 -> if b2.name = b.name && b.name <> "scene" then b2.draw ())
+          (fun b2 ->
+            if b2.name = b.name && b.name <> "scene" then b2.draw ())
           buttons
 
+(** [draw_border bl tr] draws a black button border using coordinates
+    [bl] for bottom left and [tr] for top right. *)
 let draw_border bl tr =
   set_line_width 3;
   set_color black;
   draw_rect (fst bl) (snd bl) (fst tr - fst bl) (snd tr - snd bl);
   set_line_width 1
+
+(** [clear_border bl tr] draws a white button border using coordinates
+    [bl] for bottom left and [tr] for top right. *)
 
 let clear_border bl tr =
   set_line_width 3;
