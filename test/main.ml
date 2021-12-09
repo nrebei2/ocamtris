@@ -135,9 +135,47 @@ let board_tests =
            b;
          cleared_rows b)
         ~printer:string_of_int );
+    ( "cleared_rows bottom row filled no drop" >:: fun _ ->
+      assert_equal 1
+        (let b = [| [| ' '; ' ' |]; [| 'o'; 'o' |] |] in
+         cleared_rows b)
+        ~printer:string_of_int );
+    ( "cleared_rows both rows filled no drop" >:: fun _ ->
+      assert_equal 2
+        (let b = [| [| 'i'; 'i' |]; [| 'o'; 'o' |] |] in
+         cleared_rows b)
+        ~printer:string_of_int );
     ( "cleared_rows only left side filled" >:: fun _ ->
       assert_equal 0
         (let b = [| [| ' '; ' ' |]; [| 'o'; ' ' |] |] in
+         drop
+           {
+             name = 's';
+             state = [| [| 'l'; ' ' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+           b;
+         cleared_rows b)
+        ~printer:string_of_int );
+    ( "cleared_rows only right side filled" >:: fun _ ->
+      assert_equal 0
+        (let b = [| [| ' '; ' ' |]; [| ' '; 'o' |] |] in
+         drop
+           {
+             name = 's';
+             state = [| [| ' '; 'l' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+           b;
+         cleared_rows b)
+        ~printer:string_of_int );
+    ( "cleared_rows row gets filled" >:: fun _ ->
+      assert_equal 1
+        (let b = [| [| ' '; ' ' |]; [| ' '; 'o' |] |] in
          drop
            {
              name = 's';
@@ -231,84 +269,137 @@ let board_tests =
            b;
          clear_lines b)
         ~printer:string_of_bool );
-        ( "lowest_possible middle row" >:: fun _ ->
-          assert_equal
-            {
-              name = 't';
-              state = [| [| 'l'; 'l'; ' ' |] |];
-              col = 0;
-              row = 1;
-              rot = 0;
-            }
-            (let b =
-               [|
-                 [| ' '; ' '; ' ' |];
-                 [| ' '; ' '; ' ' |];
-                 [| 'o'; ' '; 'o' |];
-               |]
-             in
-             let t =
-               {
-                 name = 't';
-                 state = [| [| 'l'; 'l'; ' ' |] |];
-                 col = 0;
-                 row = 0;
-                 rot = 0;
-               }
-             in
-             get_lowest_possible t b) );
-             ( "lowest_possible low row" >:: fun _ ->
-              assert_equal
-                {
-                  name = 't';
-                  state = [| [| 'l'; 'l'; ' ' |] |];
-                  col = 0;
-                  row = 2;
-                  rot = 0;
-                }
-                (let b =
-                   [|
-                     [| ' '; ' '; ' ' |];
-                     [| ' '; ' '; ' ' |];
-                     [| ' '; ' '; ' ' |];
-                   |]
-                 in
-                 let t =
-                   {
-                     name = 't';
-                     state = [| [| 'l'; 'l'; ' ' |] |];
-                     col = 0;
-                     row = 0;
-                     rot = 0;
-                   }
-                 in
-                 get_lowest_possible t b) );
-                 ( "lowest_possible high row" >:: fun _ ->
-                  assert_equal
-                    {
-                      name = 't';
-                      state = [| [| 'l'; 'l'; ' ' |] |];
-                      col = 0;
-                      row = 0;
-                      rot = 0;
-                    }
-                    (let b =
-                       [|
-                         [| ' '; ' '; ' ' |];
-                         [| 'o'; ' '; 'o' |];
-                         [| 'o'; ' '; 'o' |];
-                       |]
-                     in
-                     let t =
-                       {
-                         name = 't';
-                         state = [| [| 'l'; 'l'; ' ' |] |];
-                         col = 0;
-                         row = 0;
-                         rot = 0;
-                       }
-                     in
-                     get_lowest_possible t b) );
+    ( "clear_lines 4x4" >:: fun _ ->
+      let b =
+        [|
+          [| ' '; ' '; ' '; ' ' |];
+          [| ' '; ' '; ' '; ' ' |];
+          [| 'l'; ' '; 'o'; 'o' |];
+          [| 'l'; ' '; 'o'; 'o' |];
+        |]
+      in
+      assert_equal true
+        (drop
+           {
+             name = 's';
+             state =
+               [| [| ' '; 'i'; ' '; ' ' |]; [| ' '; 'i'; ' '; ' ' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+           b;
+         clear_lines b)
+        ~printer:string_of_bool );
+    ( "clear_lines 4x4 make sure board is updated" >:: fun _ ->
+      let expected_b =
+        [|
+          [| ' '; ' '; ' '; ' ' |];
+          [| ' '; ' '; ' '; ' ' |];
+          [| ' '; ' '; ' '; ' ' |];
+          [| ' '; ' '; ' '; ' ' |];
+        |]
+      in
+      let original_b =
+        [|
+          [| ' '; ' '; ' '; ' ' |];
+          [| ' '; ' '; ' '; ' ' |];
+          [| 'l'; ' '; 'o'; 'o' |];
+          [| 'l'; ' '; 'o'; 'o' |];
+        |]
+      in
+      assert_equal expected_b
+        (drop
+           {
+             name = 's';
+             state =
+               [| [| ' '; 'o'; ' '; ' ' |]; [| ' '; 'o'; ' '; ' ' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+           original_b;
+         ignore (clear_lines original_b);
+         original_b)
+        ~printer:(pp_board pp_string) );
+    ( "lowest_possible middle row" >:: fun _ ->
+      assert_equal
+        {
+          name = 't';
+          state = [| [| 'l'; 'l'; ' ' |] |];
+          col = 0;
+          row = 1;
+          rot = 0;
+        }
+        (let b =
+           [|
+             [| ' '; ' '; ' ' |];
+             [| ' '; ' '; ' ' |];
+             [| 'o'; ' '; 'o' |];
+           |]
+         in
+         let t =
+           {
+             name = 't';
+             state = [| [| 'l'; 'l'; ' ' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+         in
+         get_lowest_possible t b) );
+    ( "lowest_possible low row" >:: fun _ ->
+      assert_equal
+        {
+          name = 't';
+          state = [| [| 'l'; 'l'; ' ' |] |];
+          col = 0;
+          row = 2;
+          rot = 0;
+        }
+        (let b =
+           [|
+             [| ' '; ' '; ' ' |];
+             [| ' '; ' '; ' ' |];
+             [| ' '; ' '; ' ' |];
+           |]
+         in
+         let t =
+           {
+             name = 't';
+             state = [| [| 'l'; 'l'; ' ' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+         in
+         get_lowest_possible t b) );
+    ( "lowest_possible high row" >:: fun _ ->
+      assert_equal
+        {
+          name = 't';
+          state = [| [| 'l'; 'l'; ' ' |] |];
+          col = 0;
+          row = 0;
+          rot = 0;
+        }
+        (let b =
+           [|
+             [| ' '; ' '; ' ' |];
+             [| 'o'; ' '; 'o' |];
+             [| 'o'; ' '; 'o' |];
+           |]
+         in
+         let t =
+           {
+             name = 't';
+             state = [| [| 'l'; 'l'; ' ' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+         in
+         get_lowest_possible t b) );
   ]
 
 let tetromino_tests = []
