@@ -45,6 +45,7 @@ let draw_2D_aray
         | 'z' -> color_cell (theme Z) r' c' board_pos
         | 'j' -> color_cell (theme J) r' c' board_pos
         | 'l' -> color_cell (theme L) r' c' board_pos
+        | 'g' -> color_cell black r' c' board_pos
         | ' ' ->
             if b then
               color_cell
@@ -79,7 +80,7 @@ let clear_board b =
 let filled =
   Array.fold_left
     (fun acc x ->
-      acc && List.mem x [ 'i'; 'o'; 't'; 's'; 'z'; 'j'; 'l' ])
+      acc && List.mem x [ 'i'; 'o'; 't'; 's'; 'z'; 'j'; 'l'; 'g' ])
     true
 
 let cleared_rows b =
@@ -115,9 +116,7 @@ let clear_lines b =
     new_board |> copy_to_2D_array b;
     true
 
-
-
-(* let add_garbage n b =
+let add_garbage n b =
   let rec create_garbage_line n b =
     match n with
     | 0 -> []
@@ -125,11 +124,12 @@ let clear_lines b =
         let l = Array.make (Array.length b.(0)) 'g' in
         l.(Random.int (Array.length b.(0))) <- ' ';
         l :: create_garbage_line (n - 1) b
-    in let new_board =
-      create_garbage_line n b
-      @ uncleared_rows
-    in
-    new_board |> copy_to_2D_array b *)
+  in
+  let new_board =
+    Array.to_list (Array.sub b n (Array.length b - n))
+    @ create_garbage_line n b
+  in
+  new_board |> copy_to_2D_array b
 
 let check_valid t b =
   let checks =

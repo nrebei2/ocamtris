@@ -92,10 +92,40 @@ and process_timers game =
 
   game.timers.update <- Sys.time ()
 
+and display_garbage clear p =
+  set_color white;
+  fill_rect (fst p.board_pos + 100) (snd p.board_pos - 15) 150 13;
+  if clear then ()
+  else (
+    moveto (fst p.board_pos + 100) (snd p.board_pos - 15);
+    set_color black;
+    draw_string ("Garbage incoming: " ^ string_of_int p.garbage_info.inc))
+
+and manage_garbage players =
+  let f i p =
+    if p.garbage_info.drop = true then (
+      Board.add_garbage p.garbage_info.inc p.board;
+      Board.draw_board p.board p.board_pos;
+      p.garbage_info.drop <- false;
+      p.garbage_info.inc <- 0;
+      display_garbage true p);
+    if p.garbage_info.send > 0 then (
+      let nxt_p = List.nth players ((i + 1) mod List.length players) in
+      nxt_p.garbage_info.inc <-
+        nxt_p.garbage_info.inc + p.garbage_info.send;
+      display_garbage false nxt_p;
+      p.garbage_info.send <- 0)
+  in
+  List.iteri f players
+
 and process_game game player_name =
   if not game.over then (
+    begin
+      match Settings.settings.mode with
+      | Alone -> ()
+      | _ -> manage_garbage game.players
+    end;
     process_timers game;
-
     (if game.timers.drop_timer > game.gravity then
      try
        List.iter move_piece_down game.players;

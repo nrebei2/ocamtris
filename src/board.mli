@@ -17,7 +17,6 @@ type board = char array array
    its lower left position at [p] *)
 val draw_board : board -> int * int -> unit
 
-
 val draw_tetromino :
   ?white_out:bool ->
   ?preview:bool ->
@@ -40,6 +39,9 @@ val clear_lines : board -> bool
     filled, then clear_lines is [false]. Otherwise, it edits [b] to
     [b'], where [b'] is [b] where all rows which are filled are cleared,
     and then returns [true]. *)
+
+val add_garbage : int -> board -> unit
+(** [add_garbage n b] adds [n] rows or garbage to the bottom of [b]. *)
 
 val check_valid : Tetromino.tetromino -> board -> bool
 (** [check_valid t b] is [true] if there is no overlap with the existing

@@ -36,6 +36,12 @@ let controls =
     };
   ]
 
+type garbage = {
+  mutable drop : bool;
+  mutable inc : int;
+  mutable send : int;
+}
+
 type player = {
   bot : bool;
   board : board;
@@ -48,6 +54,7 @@ type player = {
   mutable score : int;
   mutable controls : controls;
   mutable cleared_4_rows : bool;
+  garbage_info : garbage;
 }
 
 exception CantPlace of player
@@ -69,6 +76,7 @@ let player i =
     score = 0;
     controls = List.nth controls (i mod 2);
     cleared_4_rows = false;
+    garbage_info = { drop = false; inc = 0; send = 0 };
   }
 
 let bot i = { (player i) with bot = true }
@@ -215,14 +223,14 @@ and move_piece f p =
 and rotate_piece f p =
   match process_wall_kicks f p with Some x -> place x p | None -> ()
 
-(* and send_garbage l p = 
- garbage_lines l p.board *)
+and send_garbage l p = add_garbage l p.board
 
 and complete_move should_drop p =
   draw_tetromino ~white_out:true p.current_piece p.board_pos;
   draw_tetromino
     (get_lowest_possible p.current_piece p.board)
     p.board_pos;
+
   if should_drop then (
     drop p.current_piece p.board;
     let num_rows_cleared = cleared_rows p.board in
@@ -245,8 +253,15 @@ and complete_move should_drop p =
           4
       | _ -> 0
     in
-    (* if p.cleared_4_rows then send_garbage (garbage_lines + 1) p
-    else send_garbage garbage_lines p; *)
+
+    p.garbage_info.inc <-
+      p.garbage_info.inc
+      - (garbage_lines
+        + if p.cleared_4_rows && garbage_lines > 0 then 1 else 0);
+    if p.garbage_info.inc > 0 then p.garbage_info.drop <- true
+    else (
+      p.garbage_info.send <- p.garbage_info.send + -p.garbage_info.inc;
+      p.garbage_info.inc <- 0);
     if num_rows_cleared < 4 then p.cleared_4_rows <- false
     else p.cleared_4_rows <- true;
     draw_score p;

@@ -9,6 +9,12 @@ type controls = {
 (** controls respresenting the keybinds for a player in
     [player.controls] *)
 
+type garbage = {
+  mutable drop : bool;
+  mutable inc  : int;
+  mutable send: int;
+}
+
 type player = {
   bot : bool;
   board : Board.board;
@@ -21,7 +27,9 @@ type player = {
   mutable score : int;
   mutable controls : controls;
   mutable cleared_4_rows : bool;
+  garbage_info : garbage;
 }
+
 (** mutable state of a player [player.bot] is [true] if the player is a
     bot, otherwise [false]. [player.board] is the players board.
     [player.bag_pos] is the current position of the player's
