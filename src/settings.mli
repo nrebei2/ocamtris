@@ -31,7 +31,7 @@ val difficulty_button : difficulty -> int * int -> Button.button
 (** [difficulty_botton d (i1, i2) creates a difficulty button with text based on \[d\] and size \[(i1, i2)\]] *)
 
 val mode_button : mode -> int * int -> Button.button
-(** [mode_button m (i1, i2) creates a mode_button button with text based on \[m\] and size \[(i1, i2)\]] *)
+(** [difficulty_botton d (i1, i2) creates a difficulty button with text based on \[d\] and size \[(i1, i2)\]] *)
 
 val from_json_file : string -> settings
 (** [from_json_file f] are the settings that json file [f] represents.
