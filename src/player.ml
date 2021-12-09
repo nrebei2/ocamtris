@@ -245,7 +245,7 @@ and complete_move should_drop p =
       | 3 ->
           p.score <- p.score + 500;
           2
-      | 4 when p.cleared_4_rows ->
+      | 4 when p.cleared_4_rows -> 
           p.score <- p.score + 1200;
           4
       | 4 when not p.cleared_4_rows ->
