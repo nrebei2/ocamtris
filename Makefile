@@ -17,3 +17,6 @@ clean:
 
 zip:
 	zip -r ocamtris.zip . -x _build/\* .git/\*
+
+docs:
+	dune build @doc
