@@ -49,7 +49,6 @@ let draw_border bl tr =
 
 (** [clear_border bl tr] draws a white button border using coordinates
     [bl] for bottom left and [tr] for top right. *)
-
 let clear_border bl tr =
   set_line_width 3;
   set_color white;
