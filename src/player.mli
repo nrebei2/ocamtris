@@ -11,8 +11,8 @@ type controls = {
 
 type garbage = {
   mutable drop : bool;
-  mutable inc  : int;
-  mutable send: int;
+  mutable inc : int;
+  mutable send : int;
 }
 
 type player = {
@@ -60,12 +60,12 @@ val process_human_players : player list -> unit
 val process_bot_player : player -> unit
 (** [process_bot_player p] processes [p]*)
 
-(* [spawn_piece p] draws [p.current_piece] to [p.board] and the GUI *)
 val spawn_piece : player -> unit
+(* [spawn_piece p] draws [p.current_piece] to [p.board] and the GUI *)
 
+val move_piece_down : player -> unit
 (* [move_piece_down p] clears [p.current_piece] from the board, moves
    and redraws [p.current_piece] down 1 cell *)
-val move_piece_down : player -> unit
 
-(* Keeps and updates the player's tetris score on the screen *)
 val draw_score : player -> unit
+(** Keeps and updates the player's tetris score on the screen *)

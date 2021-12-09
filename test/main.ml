@@ -1,20 +1,33 @@
-(*
-
-What we did:
-stuff
-
-
-*)
-
+(* What we did: stuff *)
 
 open OUnit2
 open Game
 open Tetromino
 open Board
 open Bot
+open Leaderboard
 
 (** Adopted from A2: [pp_string s] pretty-prints string [s]. *)
 let pp_string s = s
+
+(** Adopted from A2: [pp_list pp_elt lst] pretty-prints list [lst],
+    using [pp_elt] to pretty-print each element of [lst]. *)
+let pp_list pp_elt lst =
+  let pp_elts lst =
+    let rec loop n acc = function
+      | [] -> acc
+      | [ h ] -> acc ^ pp_elt h
+      | h1 :: (h2 :: t as t') ->
+          if n = 100 then acc ^ "..." (* stop printing long list *)
+          else loop (n + 1) (acc ^ pp_elt h1 ^ "; ") t'
+    in
+    loop 0 "" lst
+  in
+  "[" ^ pp_elts lst ^ "]"
+
+(* [pp_score (n, i)] pretty-prints a score with name [n] and score
+   [i] *)
+let pp_score (n, i) = n ^ ": " ^ string_of_int i
 
 (** [pp_board pp_elt board] pretty-prints board [board] using [pp_list]
     [pp_list pp_elt lst] pretty-prints list [lst], using [pp_elt] to
@@ -331,6 +344,26 @@ let board_tests =
          ignore (clear_lines original_b);
          original_b)
         ~printer:(pp_board pp_string) );
+    ( "lowest_possible 2x2" >:: fun _ ->
+      assert_equal
+        {
+          name = 't';
+          state = [| [| 'l'; 'l' |] |];
+          col = 0;
+          row = 0;
+          rot = 0;
+        }
+        (let b = [| [| ' '; ' ' |]; [| 'o'; ' ' |] |] in
+         let t =
+           {
+             name = 't';
+             state = [| [| 'l'; 'l' |] |];
+             col = 0;
+             row = 0;
+             rot = 0;
+           }
+         in
+         get_lowest_possible t b) );
     ( "lowest_possible middle row" >:: fun _ ->
       assert_equal
         {
@@ -412,6 +445,35 @@ let board_tests =
   ]
 
 let tetromino_tests = []
+
+let leaderboard_tests =
+  [
+    ( "compare_scores" >:: fun _ ->
+      assert_equal 300 (compare_scores ("noah", 500) ("richard", 200))
+    );
+    ( "add score forward" >:: fun _ ->
+      assert_equal
+        [ ("noah r", 1200); ("noah s", 900) ]
+        (add_score ("noah r", 1200)
+           [ ("noah s", 900); ("richard", 200) ])
+        ~printer:(pp_list pp_score) );
+    ( "add score reverse" >:: fun _ ->
+      assert_equal
+        [ ("noah s", 900); ("noah r", 500) ]
+        (add_score ("noah r", 500)
+           [ ("noah s", 900); ("richard", 200) ])
+        ~printer:(pp_list pp_score) );
+    ( "add score same score" >:: fun _ ->
+      assert_equal
+        [ ("noah s", 1200); ("noah s", 900) ]
+        (add_score ("noah s", 1200)
+           [ ("noah s", 900); ("richard", 200) ])
+        ~printer:(pp_list pp_score) );
+    ( "add score one element" >:: fun _ ->
+      assert_equal [ ("noah s", 1200) ]
+        (add_score ("noah s", 1200) [ ("noah s", 900) ])
+        ~printer:(pp_list pp_score) );
+  ]
 
 let bot_tests =
   [
@@ -496,6 +558,7 @@ let bot_tests =
 
 let suite =
   "test suite for ocamtris"
-  >::: List.flatten [ board_tests; tetromino_tests; bot_tests ]
+  >::: List.flatten
+         [ board_tests; tetromino_tests; leaderboard_tests; bot_tests ]
 
 let _ = run_test_tt_main suite

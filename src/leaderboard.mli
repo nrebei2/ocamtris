@@ -19,6 +19,11 @@ val save_leaderboard_file : leaderboard_scores -> string -> unit
 (** [save_leaderboard_file s f] exports scores [s] to filename [f]. *)
 
 val add_score : score -> leaderboard_scores -> leaderboard_scores
-(** Add a new score to the leaderboard *)
+(** Add a new score to the leaderboard, removing the lowest score *)
+
+val compare_scores : score -> score -> int
+(** [compare_scores s1 s2] returns the differencce between score [s1]
+    and score [s2]. *)
 
 val display_leaderboard : int -> unit
+(** [display_leaderboard l] draws the leaderboard to the board. *)
