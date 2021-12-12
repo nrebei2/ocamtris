@@ -1,0 +1,67 @@
+Date : 2021-12-09 18:37:04
+Directory : /Users/jacobcarreon/Downloads/CS3110/ocamtris
+Total : 33 files,  2066 codes, 249 comments, 312 blanks, all 2627 lines
+
+Languages
++-----------------+------------+------------+------------+------------+------------+
+| language        | files      | code       | comment    | blank      | total      |
++-----------------+------------+------------+------------+------------+------------+
+| OCaml           |         15 |      1,858 |         73 |        203 |      2,134 |
+| OCaml Interface |         11 |        160 |        176 |         85 |        421 |
+| Markdown        |          2 |         28 |          0 |         13 |         41 |
+| Makefile        |          1 |         15 |          0 |          7 |         22 |
+| dune workspace  |          1 |          3 |          0 |          3 |          6 |
+| JSON            |          2 |          2 |          0 |          0 |          2 |
+| opam            |          1 |          0 |          0 |          1 |          1 |
++-----------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                  | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                     |         33 |      2,066 |        249 |        312 |      2,627 |
+| assets                                                                |          2 |          2 |          0 |          0 |          2 |
+| bin                                                                   |          1 |         33 |          2 |          8 |         43 |
+| src                                                                   |         24 |      1,445 |        238 |        264 |      1,947 |
+| test                                                                  |          1 |        540 |          9 |         16 |        565 |
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------+-----------------+------------+------------+------------+------------+
+| filename                                                              | language        | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------+-----------------+------------+------------+------------+------------+
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/Game.opam               | opam            |          0 |          0 |          1 |          1 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/INSTALL.md              | Markdown        |         25 |          0 |         12 |         37 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/Makefile                | Makefile        |         15 |          0 |          7 |         22 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/README.md               | Markdown        |          3 |          0 |          1 |          4 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/assets/leaderboard.json | JSON            |          1 |          0 |          0 |          1 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/assets/settings.json    | JSON            |          1 |          0 |          0 |          1 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/bin/main.ml             | OCaml           |         33 |          2 |          8 |         43 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/dune-workspace          | dune workspace  |          3 |          0 |          3 |          6 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/Startgame.mli       | OCaml Interface |         15 |         14 |          5 |         34 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/author.ml           | OCaml           |          1 |          0 |          1 |          2 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/author.mli          | OCaml Interface |          1 |          8 |          2 |         11 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/board.ml            | OCaml           |        149 |          3 |         16 |        168 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/board.mli           | OCaml Interface |         17 |         33 |         12 |         62 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/bot.ml              | OCaml           |        133 |          2 |         16 |        151 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/bot.mli             | OCaml Interface |         10 |         23 |          8 |         41 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/button.ml           | OCaml           |         38 |          8 |          6 |         52 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/drawing.ml          | OCaml           |         55 |         28 |         14 |         97 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/gamemaster.ml       | OCaml           |         59 |          1 |         10 |         70 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/gamemaster.mli      | OCaml Interface |          1 |          2 |          0 |          3 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/leaderboard.ml      | OCaml           |         50 |          7 |         15 |         72 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/leaderboard.mli     | OCaml Interface |          7 |         15 |          7 |         29 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/player.ml           | OCaml           |        289 |          5 |         31 |        325 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/player.mli          | OCaml Interface |         35 |         25 |         12 |         72 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/scene.ml            | OCaml           |         88 |          0 |         18 |        106 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/scene.mli           | OCaml Interface |         11 |         19 |          8 |         38 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/settings.ml         | OCaml           |        128 |          3 |         12 |        143 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/settings.mli        | OCaml Interface |         25 |          8 |         10 |         43 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/startgame.ml        | OCaml           |         60 |          0 |          8 |         68 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/tetromino.ml        | OCaml           |        147 |          3 |         25 |        175 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/tetromino.mli       | OCaml Interface |         24 |         24 |         18 |         66 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/theme.ml            | OCaml           |         88 |          2 |          7 |         97 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/src/theme.mli           | OCaml Interface |         14 |          5 |          3 |         22 |
+| /Users/jacobcarreon/Downloads/CS3110/ocamtris/test/main.ml            | OCaml           |        540 |          9 |         16 |        565 |
+| Total                                                                 |                 |      2,066 |        249 |        312 |      2,627 |
++-----------------------------------------------------------------------+-----------------+------------+------------+------------+------------+
