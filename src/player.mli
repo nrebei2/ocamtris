@@ -6,14 +6,15 @@ type controls = {
   drop : char;
   hold : char;
 }
-(** controls respresenting the keybinds for a player in
-    [player.controls] *)
+(** [controls] respresent the keybinds for a player in [player.controls] *)
 
 type garbage = {
   mutable drop : bool;
   mutable inc : int;
   mutable send : int;
 }
+(** [garbage] stores information about the current garbage state of a
+    player. *)
 
 type player = {
   bot : bool;
@@ -61,11 +62,11 @@ val process_bot_player : player -> unit
 (** [process_bot_player p] processes [p]*)
 
 val spawn_piece : player -> unit
-(* [spawn_piece p] draws [p.current_piece] to [p.board] and the GUI *)
+(** [spawn_piece p] draws [p.current_piece] to [p.board] and the GUI *)
 
 val move_piece_down : player -> unit
-(* [move_piece_down p] clears [p.current_piece] from the board, moves
-   and redraws [p.current_piece] down 1 cell *)
+(** [move_piece_down p] clears [p.current_piece] from the board, moves
+    and redraws [p.current_piece] down 1 cell *)
 
 val draw_score : player -> unit
 (** Keeps and updates the player's tetris score on the screen *)

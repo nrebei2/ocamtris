@@ -4,8 +4,8 @@
     to start the game, access settings, view the leaderboard, or quit
     the game.*)
 
-(* [scene] is the state of the user that represents whether the user is
-   in the menu screen *)
+(** [scene] is the state of the user that represents whether the user is
+    in the menu screen *)
 type scene =
   | Menu
   | Settings
@@ -13,6 +13,8 @@ type scene =
   | Game
 
 val cur_scene : scene ref
+(** [cur_scene] is the scene that is currently being displayed to the
+    player. *)
 
 val open_scene : unit -> unit
 (** [open_scene] opens the current scene. [open_scene] opens the menu if
