@@ -11,11 +11,12 @@ type tetromino = {
   rot : int;
 }
 (** [tetromino] is the tetromino of a tetromino placed on the board
-    [name] is the name of the piece. [state] is a 2D respresentation of the tetromino, where [col] is the column position relative to the board for the top
-    left of state, 0-indexed [row] is the row position relative to the
-    board for the top left of state, 0-indexed. For example, for a
-    tetromino with [col = 0] and [row = 0] corresponds to the piece on
-    the top left of the board *)
+    [name] is the name of the piece. [state] is a 2D respresentation of
+    the tetromino, where [col] is the column position relative to the
+    board for the top left of state, 0-indexed [row] is the row position
+    relative to the board for the top left of state, 0-indexed. For
+    example, for a tetromino with [col = 0] and [row = 0] corresponds to
+    the piece on the top left of the board *)
 
 val i_piece : tetromino
 
@@ -59,8 +60,10 @@ val match_name_to_default : char -> tetromino
 (** [match_name_to_default c] is one of the above default values based
     on [c] Example: [match_name_to_default 'i'] is [i_piece]*)
 
-(* used when determining wall kicks, retrieved from
-   https://tetris.wiki/Super_Rotation_System#Wall_Kicks*)
 val offset_data : (int * int) array array
+(** used when determining wall kicks, retrieved from
+    https://tetris.wiki/Super_Rotation_System#Wall_Kicks*)
 
 val i_offset_data : (int * int) array array
+(** used when determining wall kicks, retrieved from
+    https://tetris.wiki/Super_Rotation_System#Wall_Kicks*)

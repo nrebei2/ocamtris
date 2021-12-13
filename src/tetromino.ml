@@ -5,7 +5,7 @@ type tetromino = {
   state : char array array;
   col : int;
   row : int;
-  rot : int
+  rot : int;
 }
 
 let i_piece =
@@ -21,19 +21,16 @@ let i_piece =
       |];
     col = 2;
     row = -1;
-    rot = 0
+    rot = 0;
   }
 
 let o_piece =
   {
     name = 'o';
-    state =
-      [|
-        [|'o'; 'o' |]; [| 'o'; 'o' |];
-      |];
+    state = [| [| 'o'; 'o' |]; [| 'o'; 'o' |] |];
     col = 4;
     row = 0;
-    rot = 0
+    rot = 0;
   }
 
 let t_Piece =
@@ -45,7 +42,7 @@ let t_Piece =
       |];
     col = 3;
     row = 0;
-    rot = 0
+    rot = 0;
   }
 
 let s_piece =
@@ -57,7 +54,7 @@ let s_piece =
       |];
     col = 3;
     row = 0;
-    rot = 0
+    rot = 0;
   }
 
 let z_piece =
@@ -69,7 +66,7 @@ let z_piece =
       |];
     col = 3;
     row = 0;
-    rot = 0
+    rot = 0;
   }
 
 let j_Piece =
@@ -81,7 +78,7 @@ let j_Piece =
       |];
     col = 3;
     row = 0;
-    rot = 0
+    rot = 0;
   }
 
 let l_piece =
@@ -93,7 +90,7 @@ let l_piece =
       |];
     col = 3;
     row = 0;
-    rot = 0
+    rot = 0;
   }
 
 let rec rotate_array_left ar =
@@ -105,7 +102,12 @@ let rec rotate_array_left ar =
   ar |> Array.to_list |> List.map Array.to_list |> rotate_list' []
   |> Array.of_list |> Array.map Array.of_list
 
-let rotate_left t = { t with state = rotate_array_left t.state; rot = if t.rot = 3 then 0 else t.rot + 1 }
+let rotate_left t =
+  {
+    t with
+    state = rotate_array_left t.state;
+    rot = (if t.rot = 3 then 0 else t.rot + 1);
+  }
 
 let rotate_right t = t |> rotate_left |> rotate_left |> rotate_left
 
@@ -115,8 +117,8 @@ let move_right t = { t with col = t.col + 1 }
 
 let move_down t = { t with row = t.row + 1 }
 
-(* Implementation of https://en.wikipedia.org/wiki/Fisher–Yates_shuffle 
-  TODO: might be bugged ?? ?  ?? ? *)
+(* Implementation of https://en.wikipedia.org/wiki/Fisher–Yates_shuffle
+   TODO: might be bugged ?? ? ?? ? *)
 let shuffle x =
   let rec shuffle_aux n x =
     match n with
@@ -135,14 +137,16 @@ let shuffle x =
 let bag = ref [||]
 
 let rec get_from_bag n =
-  try !bag.(n) with
-  | _ -> bag :=  [|
-    i_piece; o_piece; t_Piece; s_piece; z_piece; j_Piece; l_piece;
-  |]
-  |> shuffle |> Array.append !bag; get_from_bag n
+  try !bag.(n)
+  with _ ->
+    bag :=
+      [|
+        i_piece; o_piece; t_Piece; s_piece; z_piece; j_Piece; l_piece;
+      |]
+      |> shuffle |> Array.append !bag;
+    get_from_bag n
 
-let reset_bag () = 
-  bag := [||]
+let reset_bag () = bag := [||]
 
 let match_name_to_default c =
   match c with
@@ -155,20 +159,18 @@ let match_name_to_default c =
   | 'l' -> l_piece
   | _ -> failwith "how"
 
+let offset_data =
+  [|
+    [| (0, 0); (0, 0); (0, 0); (0, 0); (0, 0) |];
+    [| (0, 0); (-1, 0); (-1, -1); (0, 2); (-1, 2) |];
+    [| (0, 0); (0, 0); (0, 0); (0, 0); (0, 0) |];
+    [| (0, 0); (1, 0); (1, -1); (0, 2); (1, 2) |];
+  |]
 
-  let offset_data =
-    [|
-      [| (0, 0); (0, 0); (0, 0); (0, 0); (0, 0) |];
-      [| (0, 0); (-1, 0); (-1, -1); (0, 2); (-1, 2) |];
-      [| (0, 0); (0, 0); (0, 0); (0, 0); (0, 0) |];
-      [| (0, 0); (1, 0); (1, -1); (0, 2); (1, 2) |];
-    |]
-  
-  let i_offset_data =
-    [|
-      [| (0, 0); (-1, 0); (2, 0); (-1, 0); (2, 0) |];
-      [| (0, -1); (0, 1); (0, 1); (0, -1); (0, 2) |];
-      [| (-1, -1); (1, 1); (-2, 1); (1, 0); (-2, 0) |];
-      [| (-1, 0); (0, 0); (0, 0); (0, 1); (0, -2) |];
-    |]
-  
+let i_offset_data =
+  [|
+    [| (0, 0); (-1, 0); (2, 0); (-1, 0); (2, 0) |];
+    [| (0, -1); (0, 1); (0, 1); (0, -1); (0, 2) |];
+    [| (-1, -1); (1, 1); (-2, 1); (1, 0); (-2, 0) |];
+    [| (-1, 0); (0, 0); (0, 0); (0, 1); (0, -2) |];
+  |]
