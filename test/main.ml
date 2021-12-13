@@ -444,7 +444,76 @@ let board_tests =
          get_lowest_possible t b) );
   ]
 
-let tetromino_tests = []
+(*returns the state of a tetromino piece*)
+let get_state piece = piece.state
+
+let get_row piece = piece.row
+
+let get_col piece = piece.col
+
+let tetromino_tests =
+  [
+    ( "rotate o piece left" >:: fun _ ->
+      assert_equal o_piece.state
+        (rotate_left o_piece |> get_state)
+        ~printer:(pp_board pp_string) );
+    ( "rotate i piece right" >:: fun _ ->
+      assert_equal
+        [|
+          [| ' '; ' '; ' '; ' '; ' ' |];
+          [| ' '; ' '; 'i'; ' '; ' ' |];
+          [| ' '; ' '; 'i'; ' '; ' ' |];
+          [| ' '; ' '; 'i'; ' '; ' ' |];
+          [| ' '; ' '; 'i'; ' '; ' ' |];
+        |]
+        (rotate_right i_piece |> get_state)
+        ~printer:(pp_board pp_string) );
+    ( "rotate t piece left" >:: fun _ ->
+      assert_equal
+        [|
+          [| ' '; 't'; ' ' |]; [| 't'; 't'; ' ' |]; [| ' '; 't'; ' ' |];
+        |]
+        (rotate_left t_Piece |> get_state)
+        ~printer:(pp_board pp_string) );
+    ( "rotate i piece left and then right" >:: fun _ ->
+      assert_equal i_piece.state
+        (rotate_left i_piece |> rotate_right |> get_state)
+        ~printer:(pp_board pp_string) );
+    ( "rotate s piece right and then left" >:: fun _ ->
+      assert_equal s_piece.state
+        (rotate_left s_piece |> rotate_right |> get_state)
+        ~printer:(pp_board pp_string) );
+    ( "move i piece down" >:: fun _ ->
+      assert_equal 0
+        (move_down i_piece |> get_row)
+        ~printer:string_of_int );
+    ( "move i piece down twice" >:: fun _ ->
+      assert_equal 1
+        (move_down i_piece |> move_down |> get_row)
+        ~printer:string_of_int );
+    ( "move o piece left" >:: fun _ ->
+      assert_equal 3
+        (move_left o_piece |> get_col)
+        ~printer:string_of_int );
+    ( "move t piece right" >:: fun _ ->
+      assert_equal 4
+        (move_right t_Piece |> get_col)
+        ~printer:string_of_int );
+    ( "move t piece left and then right" >:: fun _ ->
+      assert_equal 3
+        (move_right t_Piece |> move_left |> get_col)
+        ~printer:string_of_int );
+    ( "match name i to the right piece" >:: fun _ ->
+      assert_equal i_piece (match_name_to_default 'i') );
+    ( "match name s to the right piece" >:: fun _ ->
+      assert_equal s_piece (match_name_to_default 's') );
+    ( "match name o to the right piece" >:: fun _ ->
+      assert_equal o_piece (match_name_to_default 'o') );
+    ( "match name t to the right piece" >:: fun _ ->
+      assert_equal t_Piece (match_name_to_default 't') );
+    ( "match name z to the right piece" >:: fun _ ->
+      assert_equal z_piece (match_name_to_default 'z') );
+  ]
 
 let leaderboard_tests =
   [
