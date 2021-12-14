@@ -1,30 +1,35 @@
-{"controls": [
-  {
-    "id": "player",
-    "left": "a",
-    "right": "d",
-    "rotate left": "m",
-    "move down": "s",
-    "drop": "n",
-    "hold": "h"
-  },
-  {
-    "id": "player1",
-    "left": "a",
-    "right": "d",
-    "rotate left": "1",
-    "move down": "s",
-    "drop": "2",
-    "hold": "3"
-  },
-  {
-    "id": "player2",
-    "left": "j",
-    "right": "l",
-    "rotate left": "]",
-    "move down": "k",
-    "drop": "[",
-    "hold": "p"
-  }
- ]
+{
+  "_comment": "Change controls below",
+  "controls": [
+    {
+      "_comment": "controls for singleplayer",
+      "id": "player",
+      "left": "a",
+      "right": "d",
+      "rotate left": "m",
+      "move down": "s",
+      "drop": "n",
+      "hold": "h"
+    },
+    {
+      "_comment": "controls for player1 in multiplayer",
+      "id": "player1",
+      "left": "a",
+      "right": "d",
+      "rotate left": "1",
+      "move down": "s",
+      "drop": "2",
+      "hold": "3"
+    },
+    {
+      "_comment": "controls for player2 in multiplayer",
+      "id": "player2",
+      "left": "j",
+      "right": "l",
+      "rotate left": "]",
+      "move down": "k",
+      "drop": "[",
+      "hold": "p"
+    }
+  ]
 }

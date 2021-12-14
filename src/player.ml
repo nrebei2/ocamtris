@@ -5,9 +5,6 @@ open Bot
 open Settings
 open Yojson.Basic.Util
 
-(* TODO: make controls modular (player can choose them at the start of
-   the game) *)
-
 type controls = {
   move_left : char;
   move_right : char;
@@ -204,37 +201,36 @@ and clear_piece t p =
     (get_lowest_possible t p.board)
     p.board_pos
 
-(* TODO: printing the held I piece doesnt look good, maybe dont try hard
-   coding the col and row and try something else *)
-
 and clear_draw_next_piece p =
-  draw_tetromino ~white_out:true
-    (let col, row =
-       if p.current_piece.name = 'i' then (10, 1) else (12, 2)
-     in
-     { p.current_piece with col; row })
+  let col, row, o =
+    if p.current_piece.name = 'i' then (10, 1, (0.5, -0.5))
+    else (12, 2, (0., 0.))
+  in
+  draw_tetromino ~white_out:true ~offset:o
+    { p.current_piece with col; row }
     p.board_pos;
-  draw_tetromino
-    (let col, row =
-       if p.next_piece.name = 'i' then (10, 1) else (12, 2)
-     in
-     { p.next_piece with col; row })
-    p.board_pos
+
+  let col, row, o =
+    if p.next_piece.name = 'i' then (10, 1, (0.5, -0.5))
+    else (12, 2, (0., 0.))
+  in
+  draw_tetromino ~offset:o { p.next_piece with col; row } p.board_pos
 
 and clear_draw_held_piece tmp p =
   match p.held_piece with
   | None -> ()
   | Some x ->
-      draw_tetromino ~white_out:true
-        (let col, row =
-           if p.current_piece.name = 'i' then (-6, 2) else (-4, 2)
-         in
-         { p.current_piece with col; row })
+      let col, row, o =
+        if p.current_piece.name = 'i' then (-5, 1, (-0.5, -0.5))
+        else (-4, 2, (0., 0.))
+      in
+      draw_tetromino ~white_out:true ~offset:o
+        { p.current_piece with col; row }
         p.board_pos;
-      draw_tetromino
-        (let col, row = if x.name = 'i' then (-6, 2) else (-4, 2) in
-         { x with col; row })
-        p.board_pos;
+      let col, row, o =
+        if x.name = 'i' then (-5, 1, (-0.5, -0.5)) else (-4, 2, (0., 0.))
+      in
+      draw_tetromino ~offset:o { x with col; row } p.board_pos;
       clear_piece tmp p
 
 and draw_preview p =
@@ -317,7 +313,6 @@ and complete_move should_drop p =
   p.next_piece <- get_from_bag p.bag_pos;
   spawn_piece p
 
-(* TODO: add https://tetris.wiki/Lock_delay *)
 and move_piece_down p =
   if check_valid (move_down p.current_piece) p.board = false then
     complete_move true p

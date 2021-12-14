@@ -20,6 +20,7 @@ val draw_board : board -> int * int -> unit
 val draw_tetromino :
   ?white_out:bool ->
   ?preview:bool ->
+  ?offset:float * float ->
   Tetromino.tetromino ->
   int * int ->
   unit

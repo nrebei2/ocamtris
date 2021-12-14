@@ -117,8 +117,8 @@ let move_right t = { t with col = t.col + 1 }
 
 let move_down t = { t with row = t.row + 1 }
 
-(* Implementation of https://en.wikipedia.org/wiki/Fisher–Yates_shuffle
-   TODO: might be bugged ?? ? ?? ? *)
+(* Implementation of
+   https://en.wikipedia.org/wiki/Fisher–Yates_shuffle *)
 let shuffle x =
   let rec shuffle_aux n x =
     match n with
@@ -159,6 +159,7 @@ let match_name_to_default c =
   | 'l' -> l_piece
   | _ -> failwith "how"
 
+(* used for wall kicks *)
 let offset_data =
   [|
     [| (0, 0); (0, 0); (0, 0); (0, 0); (0, 0) |];

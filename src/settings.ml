@@ -84,7 +84,6 @@ let to_json (settings : settings) : Yojson.t =
       ("mode", `String mode_str);
       ("difficulty", `String difficulty_str);
       ("theme", `String theme_str);
-      
     ]
 
 let save_settings_file (settings : settings) (filename : string) =

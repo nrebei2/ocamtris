@@ -5,34 +5,35 @@ open Settings
 
 type board = char array array
 
-(* TODO: color from any position, and remove repeated code in
-   draw_2D_array*)
 let color_cell color r c board_pos =
-  let tile_size = 30 in
+  let tile_size = 30. in
   set_color color;
   fill_rect
-    ((c * tile_size) + fst board_pos)
-    (((fst settings.board_size - r - 1) * tile_size) + snd board_pos)
-    (tile_size - 1) (tile_size - 1)
+    ((c *. tile_size) +. (fst board_pos |> float_of_int) |> int_of_float)
+    (((float_of_int (fst settings.board_size) -. r -. 1.) *. tile_size)
+     +. (snd board_pos |> float_of_int)
+    |> int_of_float)
+    (tile_size -. 1. |> int_of_float)
+    (tile_size -. 1. |> int_of_float)
 
-let draw_2D_aray
-    ?draw_white:(b = false)
-    ?white_out:(b2 = false)
-    ?preview:(b3 = false)
+let draw_2D_array
+    ?(draw_white = false)
+    ?(white_out = false)
+    ?(preview = false)
     ar
     row_start
     column_start
     board_pos =
   for r = 0 to Array.length ar - 1 do
     for c = 0 to Array.length ar.(0) - 1 do
-      let r' = r + row_start in
-      let c' = c + column_start in
+      let r' = float_of_int r +. row_start in
+      let c' = float_of_int c +. column_start in
       let theme c = c |> colors_of_pallete settings.theme in
-      if b3 then
+      if preview then
         match ar.(r).(c) with
         | ' ' -> ()
         | _ -> color_cell (theme Preview) r' c' board_pos
-      else if b2 then
+      else if white_out then
         match ar.(r).(c) with
         | ' ' -> ()
         | _ -> color_cell (theme Background) r' c' board_pos
@@ -47,7 +48,7 @@ let draw_2D_aray
         | 'l' -> color_cell (theme L) r' c' board_pos
         | 'g' -> color_cell black r' c' board_pos
         | ' ' ->
-            if b then
+            if draw_white then
               color_cell
                 (Background |> colors_of_pallete settings.theme)
                 r' c' board_pos
@@ -56,12 +57,16 @@ let draw_2D_aray
     done
   done
 
-let draw_board b = draw_2D_aray ~draw_white:true b 0 0
+let draw_board b = draw_2D_array ~draw_white:true b 0. 0.
 
-let draw_tetromino ?white_out:(b2 = false) ?preview:(b3 = false) t =
-  match t with
+let draw_tetromino
+    ?white_out:(b2 = false)
+    ?preview:(b3 = false)
+    ?offset:(o = (0., 0.)) = function
   | { name; state; col = c; row = r } ->
-      draw_2D_aray ~white_out:b2 ~preview:b3 state r c
+      draw_2D_array ~white_out:b2 ~preview:b3 state
+        ((r |> float_of_int) +. snd o)
+        ((c |> float_of_int) +. fst o)
 
 let copy_to_2D_array b1 b2 =
   for r = 0 to Array.length b1 - 1 do

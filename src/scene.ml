@@ -18,14 +18,14 @@ let string_of_scene scene =
   | Menu -> "Menu"
   | Settings -> "Settings"
   | Leaderboard -> "Leaderboard"
-  | Game -> "Ocamtris"
+  | Game -> "Play"
 
 let theme_button_size = (100, 100)
 
 let padding = 50
 
 let generate_theme_buttons (themes : palletes list) : button list =
-  let cur_x, cur_y = (100, 600) in
+  let cur_x, cur_y = (125, 600) in
   let width, height = theme_button_size in
   List.mapi
     (fun index theme ->
@@ -49,10 +49,24 @@ let rec settings_buttons () =
 
 and menu_buttons () =
   [
-    scene_button Game (300, 600);
-    scene_button Settings (300, 400);
-    scene_button Leaderboard (300, 200);
+    scene_button Game (315, 700);
+    scene_button Settings (305, 500);
+    scene_button Leaderboard (300, 300);
+    quit_button ()
   ]
+
+and quit_button () =
+  {
+    name = "quit";
+    bottom_left = (315, 100);
+    top_right = (350, 115);
+    draw =
+      (fun () ->
+        set_color black;
+        moveto 315 100;
+        draw_string "Quit");
+    pressed_action = (fun () -> exit 0);
+  }
 
 and leaderboard_buttons () = [ scene_button Menu (500, 100) ]
 
@@ -72,7 +86,9 @@ and open_scene () =
       List.iter (fun b -> b.draw ()) (menu_buttons ())
   | Settings ->
       resize_window 650 800;
-      List.iter (fun b -> b.draw ()) (settings_buttons ())
+      List.iter (fun b -> b.draw ()) (settings_buttons ());
+      moveto 310 725;
+      draw_string "Themes"
   | Game -> Startgame.play_game ()
   | Leaderboard ->
       resize_window 650 800;

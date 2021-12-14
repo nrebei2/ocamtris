@@ -1,7 +1,6 @@
 open Board
 open Tetromino
 
-(* TODO: wrong i think *)
 let landing_height t b =
   let drop = get_lowest_possible t b in
   let landing_height =
