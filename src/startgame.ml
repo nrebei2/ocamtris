@@ -46,9 +46,9 @@ let init_game () =
    /. 1.;
  cur_game.difficulty <-
    (match Settings.settings.diff with 
-   | Easy -> 0.5
-   | Fair -> 0.2
-   | Hard -> 0.000000000075);
+   | Easy -> 0.2
+   | Fair -> 0.1
+   | Hard -> 0.05);
  cur_game.timers <- default_timer ()
  
 let init_screen game =
@@ -59,7 +59,7 @@ let init_screen game =
      draw_score x;
      draw_outline x.board_pos;
      draw_next_piece x.board_pos;
-     draw_instructions x;
+     if x.bot = false then draw_instructions x;
      spawn_piece x)
    game.players
 let play_game () =
